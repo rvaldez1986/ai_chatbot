@@ -4,13 +4,18 @@ Created on Thu Jun 13 21:17:17 2019
 
 @author: rober
 """
+import os
+import sys
+module_path = os.path.abspath(os.path.join('..'))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 
-import random
 from flask import Flask, request
 from pymessenger.bot import Bot
+from text_processer import proc_message
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBAANiWP6trPMhiRh5tAUSOPapdpSmeNP0x2HZAdpjsyKIFm4y31sk9xWcxfyZBHsIUeGyr4oBjwO1SruZAmdWnFqfYh62GZAzwGkFneBRU5rifYnkzlWZAZA97GkM3ehDKgU5vuWB3ixaZB6WWvZAI0rBkpdC2QRfggZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBALM0hbblbEUcUX28FsTUyMXvK20dZC7p0bUKcd9zoAKZBfHXUr3cpE2ler82AtZC4YMOADa8ZBrk0E9eZBxnn0A0ytEZCj84rcIS8ZCvbr97BzVh0NSkA8Udoo4OumZAFuHIZCa5tZAiAOEmarvCFRII5drRSoAfBsJAZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 
@@ -49,17 +54,6 @@ def verify_fb_token(token_sent):
     if token_sent == VERIFY_TOKEN:
         return request.args.get("hub.challenge")
     return 'Invalid verification token'
-
-
-#chooses a random message to send to the user
-def proc_message(message):
-    if message == 'hola':
-        sample_responses = ["hola soy un chatbot con ai"]
-    else:
-        sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!", "We're greatful to know you :)"]
-    # return selected item to the user
-    return random.choice(sample_responses)   
-
 
 
 if __name__ == "__main__":
