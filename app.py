@@ -10,7 +10,7 @@ from flask import Flask, request
 from pymessenger.bot import Bot
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBAGpwTZBP6ZCu4GrgUSdYjslxoEGHstXQa1JbLzRQCZBvxNw3XMRPGJQuiTOKHQb8nimnzUFlAlxoh9oM7AwtmaKBtZCjLZCNcx3Iqhx07Yu8swWX4dxgt91Ul1cjFeMZC8yuZBEhjfWoyrMZBVQDLyyz5pkh7BX3OAZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBAANiWP6trPMhiRh5tAUSOPapdpSmeNP0x2HZAdpjsyKIFm4y31sk9xWcxfyZBHsIUeGyr4oBjwO1SruZAmdWnFqfYh62GZAzwGkFneBRU5rifYnkzlWZAZA97GkM3ehDKgU5vuWB3ixaZB6WWvZAI0rBkpdC2QRfggZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 
@@ -33,16 +33,14 @@ def receive_message():
                 #Facebook Messenger ID for user so we know where to send response back to
                 recipient_id = x['sender']['id']
                 if x['message'].get('text'):
-                    message = x['message']['text']
-                    bot.send_text_message(recipient_id, message)
+                    in_message = x['message']['text']
+                    out_message = proc_message(in_message)
+                    bot.send_text_message(recipient_id, out_message)
                 #if user sends us a GIF, photo,video, or any other non-text item
                 if x['message'].get('attachments'):
-                    for att in x['message'].get('attachments'):
-                        bot.send_attachment_url(recipient_id, att['type'], att['payload']['url'])
+                    out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
+                    bot.send_text_message(recipient_id, out_message)
     return "Message Processed"
-
-
-
 
 
 def verify_fb_token(token_sent):
@@ -54,24 +52,15 @@ def verify_fb_token(token_sent):
 
 
 #chooses a random message to send to the user
-def get_message0(message):
+def proc_message(message):
     if message == 'hola':
         sample_responses = ["hola soy un chatbot con ai"]
     else:
         sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!", "We're greatful to know you :)"]
     # return selected item to the user
-    return random.choice(sample_responses)    
+    return random.choice(sample_responses)   
 
-def get_message1():
-    sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!", "We're greatful to know you :)"]
-    # return selected item to the user
-    return random.choice(sample_responses)
 
-#uses PyMessenger to send response to user
-def send_message(recipient_id, response):
-    #sends user the text message provided via input response parameter
-    bot.send_text_message(recipient_id, response)
-    return "success"
 
 if __name__ == "__main__":
     app.run()
