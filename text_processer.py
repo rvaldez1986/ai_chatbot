@@ -150,11 +150,3 @@ def proc_message(message):
         
     
     return ret_message
-    
-    
-    
-
-
-
-
-
