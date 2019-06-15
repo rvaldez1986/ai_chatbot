@@ -35,34 +35,34 @@ def proc_message(message):
     
     #REPLY BAD POLARITY
     rep = 'El objetivo de ACTUARIA es siempre mantener los estandares mas altos de satisfaccion del cliente. \
-            Este correo sera enviado directamente a nuestro departamento gerencial para realizar el analisis pertinente.\
-            Por favor ingrese su correo en este chat y nos contactaremos directamente con usted con el objetivo de \
-            solucionar cualquier inconveniente'    
+    Este correo sera enviado directamente a nuestro departamento gerencial para realizar el analisis pertinente. \
+    Por favor ingrese su correo en este chat y nos contactaremos directamente con usted con el objetivo de \
+    solucionar cualquier inconveniente'    
     
     
     #REPLIES (TOPIC * NOUNS)
     
-    rep0 = 'Para obtener mas informacion sobre jubilacion patronal por favor escribir un correo electronico\
-                   a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
-                   inmediatamente con usted.'    
+    rep0 = 'Para obtener mas informacion sobre jubilacion patronal por favor escribir un correo electronico \
+    a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
+    inmediatamente con usted.'    
     
     rep1 = 'El precio de un estudio de jubilacion patronal se establece en terminos de el numero \
-                   de trabajadores y la complejidad, para una cotizacion directa por favor escribir un correo electronico\
-                   a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
-                   inmediatamente con usted.'
+    de trabajadores y la complejidad, para una cotizacion directa por favor escribir un correo electronico \
+    a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
+    inmediatamente con usted.'
     
-    rep2 = 'Para obtener mas informacion de el area de consultoria por favor escribir un correo electronico\
-                   a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
-                   inmediatamente con usted.'    
+    rep2 = 'Para obtener mas informacion de el area de consultoria por favor escribir un correo electronico \
+    a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
+    inmediatamente con usted.'    
     
-    rep3 = 'El precio de un estudio de consultoria se establece en terminos de el tamaño de la empresa \
-                   y la complejidad, para una cotizacion directa por favor escribir un correo electronico\
-                   a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos \
-                   inmediatamente con usted.'
+    rep3 = 'El precio de un estudio de consultoria se establece en terminos de el tamaño de la empresa\
+    y la complejidad, para una cotizacion directa por favor escribir un correo electronico\
+    a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos\
+    inmediatamente con usted.'
                    
     rep4 = 'Para obtener mas informacion sobre los estudios de compensaciones y/o recursos humanos \
-                por favor escribir un correo electronico a 123456@actuaria.com.ec o\
-                    dejenos su correo en este chat y nos contactaremos inmediatamente con usted.'   
+    por favor escribir un correo electronico a 123456@actuaria.com.ec o \
+    dejenos su correo en este chat y nos contactaremos inmediatamente con usted.'   
                    
     rep5 = 'El precio de un estudio de compensaciones y/o recursos humanos se establece en terminos de el tamaño de la empresa \
                    y la complejidad, para una cotizacion directa por favor escribir un correo electronico\
@@ -77,9 +77,14 @@ def proc_message(message):
                 un correo a 123456@actuaria.com.ec o\
                     dejenos su correo en este chat y nos contactaremos inmediatamente con usted.'
                     
+    #Mensaje no topic                    
     repm1 = 'No se pudo validar su solicitud, por favor enviar \
                 un correo a 123456@actuaria.com.ec o\
                     dejenos su correo en este chat y nos contactaremos inmediatamente con usted.'
+                    
+    #Greeting message
+    repgt = 'Hola, mi nombre es eC-BOT y soy un chatbot con \
+                                inteligencia artificial elaborado por la division Actuaria-ai. '
                    
     
     
@@ -135,6 +140,8 @@ def proc_message(message):
     
     if max(topics) > 0:
         r = respuestas[(a,b)]
+    elif gt > 0:
+        r = ''
     else:
         r = repm1
     
@@ -143,8 +150,7 @@ def proc_message(message):
         ret_message = rep        
     else:
         if gt > 0:
-            ret_message += 'Hola, mi nombre es ACTUA-BOT y soy un chatbot con \
-                                inteligencia artificial elaborado por Actuaria-ai. '
+            ret_message += repgt
         
         ret_message += r
         
