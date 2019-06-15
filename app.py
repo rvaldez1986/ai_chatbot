@@ -15,7 +15,7 @@ from pymessenger.bot import Bot
 from text_processer import proc_message
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBAFFfgpSFIMNTFRZC3ZB2ocwUOXU3qSxAZB3j1s9G7XkNhjX2PcFQZBcdVoWaekFNQ1SogUDN2cxZC4C1j8ZBhzjzwZATMhD7AZB6JvdBPIbnlJ1FQdJdFZCPYnYnVhXtHEwSZAtVHK2hqMXZAm7KN85Yj1hfpsXuwrjAwZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBADQOZBtz7c3rEepj8vfQs7bX7uctc2pkoaCVGAM4qhceViAo7tZBqaurRUoOYVPsDvOvQhE1Yxkd2ZAvbZB1rZCjkxFZCdfOJJyjV2MfRdVVDS5mARhBbWpZBILVHEVLL1toZBaZBIimNLhf1enGoGhqrFkwcQg4i0AZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 

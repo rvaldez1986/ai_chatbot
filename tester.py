@@ -12,8 +12,8 @@ import numpy as np
 from text_processer import proc_message
 from textblob import TextBlob
 
-message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
-#message = 'que mal servicio que dan' 
+#message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
+message = 'que mal servicio que dan' 
 #message = 'cuanto cuesta un estudio de pasivo laboral'  
 #message = 'cuanto cuesta un estudio de consultoria'
 #message = 'cuanto cuesta un esudio del iess'
