@@ -15,9 +15,9 @@ def proc_message(message):
     greeting_tokens = ["hello", "hi", "greetings", "good", "morning"]
     
     #Topic tokens
-    tokens_estudio_jp = ['actuarial', 'employee', 'employer', 'company', 'retirement']
-    tokens_consultoria = ['technical', 'note', 'insurance', 'prepaid', 'medicine', 'consulting', 'consult',
-                          'company', 'statistical', 'mathematical', 'math', 'analysis']
+    tokens_estudio_jp = ['actuarial', 'employee', 'employer', 'company', 'retirement', 'labor', 'liabilities']
+    tokens_consultoria = ['technical', 'note', 'insurance', 'prepaid', 'medicine', 'consulting', 'consult', 'consultancy',
+                      'company', 'statistical', 'mathematical', 'math', 'analysis']
     tokens_rrhh = ['salary', 'level', 'compensation', 'wage', 'climate']
     tokens_iess = ['retirement', 'iess', 'disability', 'old', 'age', 'death', 'insurance']
     tokens_jobseeker = ['hiring', 'hire']
@@ -107,16 +107,17 @@ def proc_message(message):
             gt += 1
 
     for w in blob.words:
-        w = w.lemmatize()
-        if w in tokens_estudio_jp:
+        w1 = w.lemmatize()
+        w2 = w
+        if (w1 in tokens_estudio_jp) or (w2 in tokens_estudio_jp):
             topics[0] += 1
-        if w in tokens_consultoria:
+        if (w1 in tokens_consultoria) or (w2 in tokens_consultoria):
             topics[1] += 1
-        if w in tokens_rrhh:
+        if (w1 in tokens_rrhh) or (w2 in tokens_rrhh):   
             topics[2] += 1
-        if w in tokens_iess:
+        if (w1 in tokens_iess) or (w2 in tokens_iess):    
             topics[3] += 1
-        if w in tokens_jobseeker:
+        if (w1 in tokens_jobseeker) or (w2 in tokens_jobseeker):   
             topics[4] += 1
 
 
@@ -146,7 +147,7 @@ def proc_message(message):
         r = repm1
     
     
-    if pol < 0:
+    if pol < -0.05:
         ret_message = rep        
     else:
         if gt > 0:
