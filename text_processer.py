@@ -107,12 +107,12 @@ def dict_topics():
 
 def proc_message(message): 
     
-    #variables
+    #VARIABLES
     pol = 0
     gt = 0
     b = 0
     topic_l = np.array([0,0,0,0,0]) #0: jub-pat, 1: consultoria, 2: RRHH, 3: IESS, 4: JOB SEEKERS
-    nouns = np.array([0]) #0: PRICE, MORE INFO
+    nouns = np.array([0]) #0: price
     ret_message = ''
     
     respuestas = dict_reply()
@@ -120,12 +120,12 @@ def proc_message(message):
     
     try:    
             
-        #translate and sentiment analysis    
+        #TRANSLATE AND SENTIMENT ANALYSIS   
         blob = TextBlob(message)
         blob = blob.translate(to='en').lower()    
         pol = blob.sentiment[0]
         
-        #topic analysis    
+        #TOPIC ANALYSIS  
         for w in blob.words:
             w1 = w.lemmatize() ; w2 = w
             if (w1 in topics['gt']) or (w2 in topics['gt']):
@@ -140,8 +140,10 @@ def proc_message(message):
                 topic_l[3] += 1
             if (w1 in topics['js']) or (w2 in topics['js']):   
                 topic_l[4] += 1    
-                
-        #Noun analysis                
+         
+        a  = np.argmax(topic_l) #a says what topic is the text, gt says if we need a greeting       
+        
+        #NOUN ANALYSIS            
         blob_nouns = list()
         for word, tag in blob.tags:
             if tag == 'NN':
@@ -150,29 +152,25 @@ def proc_message(message):
         for n in blob_nouns:
             if n in topics['pn']:
                 nouns[0] += 1
-            
-        
-        a  = np.argmax(topic_l)
-        
+           
         if nouns[0] > 0:
-            b = 1
-               
+            b = 1         #b says if the text contains something related to price              
         
+        #ASSIGN REPLY
         if max(topic_l) > 0:
             r = respuestas[(a,b)]
         elif gt > 0:
             r = ''
         else:
-            r = respuestas['NT']
-        
-        
+            r = respuestas['NT']  #r, if topic exists, assign topic response, otherwise if not greeting has the no topic NT 
+                
         if pol < -0.05:
             ret_message = respuestas['NP']    
         else:
             if gt > 0:
                 ret_message += respuestas['gret'] 
             
-            ret_message += r
+            ret_message += r     #ret_message if negative polarity, np message, else add greeting + topic message
             
     except:
         

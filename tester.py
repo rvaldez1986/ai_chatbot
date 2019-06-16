@@ -120,8 +120,8 @@ for i in range(5):
     
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
 #message = 'que mal servicio que dan' 
-#message = 'cuanto cuesta un esudio del iess'
-message = 'No'
+message = 'cuanto cuesta un esudio del iess'
+#message = 'No'
     
 blob = TextBlob(message)
 blob = blob.translate(to='en').lower()    
