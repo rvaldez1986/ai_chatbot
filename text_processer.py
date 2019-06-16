@@ -23,21 +23,21 @@ def dict_reply():
             'a 123456@actuaria.com.ec. ')    
     
     rep1 = ('El precio de un estudio de jubilacion patronal se establece en terminos de el numero '
-            'de trabajadores y la complejidad, para una cotizacion directa por favor escribir un correo electronico '
+            'de trabajadores y la complejidad. Para una cotizacion directa por favor escribir un correo electronico '
             'a 123456@actuaria.com.ec. ')
     
     rep2 = ('Para obtener mas informacion de el area de consultoria por favor escribir un correo electronico '
             'a 123456@actuaria.com.ec. ')    
     
     rep3 = ('El precio de un estudio de consultoria se establece en terminos de el tamaño de la empresa '
-            'y la complejidad, para una cotizacion directa por favor escribir un correo electronico '
+            'y la complejidad. Para una cotizacion directa por favor escribir un correo electronico '
             'a 123456@actuaria.com.ec. ')
                    
     rep4 = ('Para obtener mas informacion sobre los estudios de compensaciones y/o recursos humanos '
             'por favor escribir un correo electronico a 123456@actuaria.com.ec. ')   
                    
     rep5 = ('El precio de un estudio de compensaciones y/o recursos humanos se establece en terminos de '
-            'el tamaño de la empresa y la complejidad, para una cotizacion directa por favor escribir un '
+            'el tamaño de la empresa y la complejidad. Para una cotizacion directa por favor escribir un '
             'correo electronico a 123456@actuaria.com.ec. ')    
                    
     rep6 = ('Para obtener informacion sobre temas relacionados al IESS por favor escribir un correo '
@@ -54,8 +54,8 @@ def dict_reply():
              'division Actuaria-ai. ')  
     
     #Email messages
-    repem1 = ('O si desea, nos puede dejar su correo en este chat y nos contactaremos con usted. ')
-    repem2 = ('Muchas gracias por incluir su correo, nos contactaremos con usted a la brevedad posible.')
+    repem1 = ('Nos puede tambien dejar su correo electronico en este chat y nos contactaremos directamente con usted. ')
+    repem2 = ('Muchas gracias por enviarnos su correo electronico, nos contactaremos con usted en la brevedad posible. ')
     
     
     lres = [rep0,rep1,rep2,rep3,rep4,rep5,rep6,rep6,rep7,rep7]    #for 6 and 7 not option for price            
@@ -161,38 +161,34 @@ def proc_message(message):
         #LETTER ANALYSIS (email, etc)
         for s in str(blob):
             if s in topics['em']:
-                email = 1
+                email += 1
                  
         
-        #ASSIGN REPLY  (pol, gt, topic_l)      
-        
-        
-        
-        
-        
-        
-        
-        
-        if pol < -0.05:
-            ret_message = respuestas['NP']    
-        else:
-            if gt > 0:
-                ret_message += respuestas['gret']  #add greeting
-                
-            if max(topic_l) > 0:
-                r = respuestas[(a,b)]
-            elif gt > 0 or email == 1:
-                r = ''            
+        #ASSIGN REPLY  (pol, gt, topic_l)         
+        if gt > 0:
+            ret_message += respuestas['gret']          #include greeting  
+        if pol < -0.05:                                 #negative polarity has its own reply
+            ret_message += respuestas['NP']
+            if email > 0:
+                ret_message += respuestas['em2']
             else:
-                r = respuestas['NT']  #r, if topic exists, assign topic response, otherwise if not greeting has the no topic NT 
+                ret_message += respuestas['em1'] 
+        else:
+            if max(topic_l) > 0:                          #it there is a topic found
+                ret_message += respuestas[(a,b)]
+                if email > 0:
+                    ret_message += respuestas['em2']
+                else:
+                    ret_message += respuestas['em1']            
+            elif gt == 0 and email == 0:                           #if no topic, no greeeting and no email
+                ret_message += respuestas['NT'] + respuestas['em1'] 
+            elif email > 0:                                         #if just email, note if just greeting gets solved on top
+                ret_message += respuestas['em2']
+         
                 
-            ret_message += r     #ret_message if negative polarity, np message, else add greeting and\or topic message
-            
-            if email == 1:
-                
-            
+    #In case of errors:        
     except:
         
-        ret_message =  respuestas['NT']   
+        ret_message =  respuestas['NT'] + respuestas['em1']
     
     return ret_message
