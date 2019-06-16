@@ -110,6 +110,7 @@ def proc_message(message):
     #variables
     pol = 0
     gt = 0
+    b = 0
     topic_l = np.array([0,0,0,0,0]) #0: jub-pat, 1: consultoria, 2: RRHH, 3: IESS, 4: JOB SEEKERS
     nouns = np.array([0]) #0: PRICE, MORE INFO
     ret_message = ''
@@ -117,21 +118,18 @@ def proc_message(message):
     respuestas = dict_reply()
     topics = dict_topics()    
     
-    try:       
-        
-        #process    
+    try:    
+            
+        #translate and sentiment analysis    
         blob = TextBlob(message)
         blob = blob.translate(to='en').lower()    
         pol = blob.sentiment[0]
-    
+        
+        #topic analysis    
         for w in blob.words:
-            w = w.lemmatize()
-            if w in topics['gt']:
-                gt += 1
-    
-        for w in blob.words:
-            w1 = w.lemmatize()
-            w2 = w
+            w1 = w.lemmatize() ; w2 = w
+            if (w1 in topics['gt']) or (w2 in topics['gt']):
+                gt += 1         
             if (w1 in topics['jp']) or (w2 in topics['jp']):
                 topic_l[0] += 1
             if (w1 in topics['c']) or (w2 in topics['c']):
@@ -141,14 +139,13 @@ def proc_message(message):
             if (w1 in topics['iess']) or (w2 in topics['iess']):    
                 topic_l[3] += 1
             if (w1 in topics['js']) or (w2 in topics['js']):   
-                topic_l[4] += 1
-    
-    
+                topic_l[4] += 1    
+                
+        #Noun analysis                
         blob_nouns = list()
         for word, tag in blob.tags:
             if tag == 'NN':
-                blob_nouns.append(word.lemmatize())
-    
+                blob_nouns.append(word.lemmatize())    
     
         for n in blob_nouns:
             if n in topics['pn']:
@@ -159,9 +156,7 @@ def proc_message(message):
         
         if nouns[0] > 0:
             b = 1
-        else:
-            b = 0    
-        
+               
         
         if max(topic_l) > 0:
             r = respuestas[(a,b)]
