@@ -14,54 +14,49 @@ def dict_reply():
     
     #REPLY NEG POLARITY
     repNP = ('El objetivo de ACTUARIA es siempre mantener los estandares mas altos de satisfaccion del cliente. '
-             'Este correo sera enviado directamente a nuestro departamento gerencial para realizar el analisis pertinente. '
-             'Por favor ingrese su correo en este chat y nos contactaremos directamente con usted con el objetivo de '
-             'solucionar cualquier inconveniente')    
+             'El contenido de este chat sera enviado directamente a nuestro departamento gerencial para '
+             'realizar el analisis pertinente. ')    
     
     #REPLIES (TOPIC * NOUNS)
     
     rep0 = ('Para obtener mas informacion sobre jubilacion patronal por favor escribir un correo electronico '
-            'a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')    
+            'a 123456@actuaria.com.ec. ')    
     
     rep1 = ('El precio de un estudio de jubilacion patronal se establece en terminos de el numero '
             'de trabajadores y la complejidad, para una cotizacion directa por favor escribir un correo electronico '
-            'a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')
+            'a 123456@actuaria.com.ec. ')
     
     rep2 = ('Para obtener mas informacion de el area de consultoria por favor escribir un correo electronico '
-            'a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')    
+            'a 123456@actuaria.com.ec. ')    
     
     rep3 = ('El precio de un estudio de consultoria se establece en terminos de el tamaño de la empresa '
             'y la complejidad, para una cotizacion directa por favor escribir un correo electronico '
-            'a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')
+            'a 123456@actuaria.com.ec. ')
                    
     rep4 = ('Para obtener mas informacion sobre los estudios de compensaciones y/o recursos humanos '
-            'por favor escribir un correo electronico a 123456@actuaria.com.ec o '
-            'dejenos su correo en este chat y nos contactaremos inmediatamente con usted.')   
+            'por favor escribir un correo electronico a 123456@actuaria.com.ec. ')   
                    
     rep5 = ('El precio de un estudio de compensaciones y/o recursos humanos se establece en terminos de '
             'el tamaño de la empresa y la complejidad, para una cotizacion directa por favor escribir un '
-            'correo electronico a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')    
+            'correo electronico a 123456@actuaria.com.ec. ')    
                    
     rep6 = ('Para obtener informacion sobre temas relacionados al IESS por favor escribir un correo '
-            'electronico a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')                
+            'electronico a 123456@actuaria.com.ec. ')                
             
     rep7 = ('Para obtener informacion sobre posiciones vacantes y proximas entrevistas por favor enviar '
-            'un correo a 123456@actuaria.com.ec o dejenos su correo en este chat y nos contactaremos '
-            'inmediatamente con usted.')
+            'un correo a 123456@actuaria.com.ec. ')
                     
     #Mensaje no topic                    
-    repNT = ('No se pudo validar su solicitud, por favor enviar un correo a 123456@actuaria.com.ec o '
-             'dejenos su correo en este chat y nos contactaremos inmediatamente con usted.')
+    repNT = ('Para informacion detallada por favor enviar un correo a 123456@actuaria.com.ec. ')
                     
     #Greeting message
     repgret = ('Hola, mi nombre es eC-BOT y soy un chatbot con inteligencia artificial elaborado por la '
-             'division Actuaria-ai.')  
+             'division Actuaria-ai. ')  
+    
+    #Email messages
+    repem1 = ('O si desea, nos puede dejar su correo en este chat y nos contactaremos con usted. ')
+    repem2 = ('Muchas gracias por incluir su correo, nos contactaremos con usted a la brevedad posible.')
+    
     
     lres = [rep0,rep1,rep2,rep3,rep4,rep5,rep6,rep6,rep7,rep7]    #for 6 and 7 not option for price            
     
@@ -74,6 +69,8 @@ def dict_reply():
     respuestas['NP'] = repNP        
     respuestas['gret'] = repgret
     respuestas['NT'] = repNT
+    respuestas['em1'] = repem1
+    respuestas['em2'] = repem2
     
     return respuestas
 
@@ -93,6 +90,9 @@ def dict_topics():
     #nouns
     price_nouns = ['price', 'cost']
     
+    #email 
+    letters_email = ['@']
+    
     topics = {}
     topics['gt'] = greeting_tokens
     topics['jp'] = tokens_estudio_jp 
@@ -101,6 +101,7 @@ def dict_topics():
     topics['iess'] = tokens_iess
     topics['js'] = tokens_jobseeker
     topics['pn'] = price_nouns
+    topics['em'] =  letters_email
     
     return topics
 
@@ -111,6 +112,7 @@ def proc_message(message):
     pol = 0
     gt = 0
     b = 0
+    email = 0
     topic_l = np.array([0,0,0,0,0]) #0: jub-pat, 1: consultoria, 2: RRHH, 3: IESS, 4: JOB SEEKERS
     nouns = np.array([0]) #0: price
     ret_message = ''
@@ -154,9 +156,23 @@ def proc_message(message):
                 nouns[0] += 1
            
         if nouns[0] > 0:
-            b = 1         #b says if the text contains something related to price              
+            b = 1         #b says if the text contains something related to price
+
+        #LETTER ANALYSIS (email, etc)
+        for s in str(blob):
+            if s in topics['em']:
+                email = 1
+                 
         
         #ASSIGN REPLY  (pol, gt, topic_l)      
+        
+        
+        
+        
+        
+        
+        
+        
         if pol < -0.05:
             ret_message = respuestas['NP']    
         else:
@@ -165,12 +181,15 @@ def proc_message(message):
                 
             if max(topic_l) > 0:
                 r = respuestas[(a,b)]
-            elif gt > 0:
-                r = ''
+            elif gt > 0 or email == 1:
+                r = ''            
             else:
                 r = respuestas['NT']  #r, if topic exists, assign topic response, otherwise if not greeting has the no topic NT 
                 
             ret_message += r     #ret_message if negative polarity, np message, else add greeting and\or topic message
+            
+            if email == 1:
+                
             
     except:
         

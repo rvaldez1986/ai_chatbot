@@ -15,7 +15,7 @@ from pymessenger.bot import Bot
 from text_processer import proc_message
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBADQOZBtz7c3rEepj8vfQs7bX7uctc2pkoaCVGAM4qhceViAo7tZBqaurRUoOYVPsDvOvQhE1Yxkd2ZAvbZB1rZCjkxFZCdfOJJyjV2MfRdVVDS5mARhBbWpZBILVHEVLL1toZBaZBIimNLhf1enGoGhqrFkwcQg4i0AZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBAPabcAWXiZCpQZAJ3nZBkdZCZCQmCqNfaG9BlPeW4AXDYZAmTleyPxwP3Ye5Od8oqpjA4F77kgr29bP17wm31KhPoZCavJwZAmhUVOdKj9UK4C9yFzdKQik99TdFpWPhSJcNFZAT8cUWAV1fDI5WLVIFn7WygSwVVWAZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 
@@ -29,7 +29,7 @@ def receive_message():
         return verify_fb_token(token_sent)
     #if the request was not get, it must be POST and we can just proceed with sending a message back to user
     else:
-        # get whatever message a user sent the bot
+        # get whatever message a user sent the bot       
        output = request.get_json()
        for event in output['entry']:
           messaging = event['messaging']
@@ -45,6 +45,10 @@ def receive_message():
                 if x['message'].get('attachments'):
                     out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
                     bot.send_text_message(recipient_id, out_message)
+    
+        
+    
+    
     return "Message Processed"
 
 
