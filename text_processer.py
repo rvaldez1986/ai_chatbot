@@ -105,7 +105,7 @@ def dict_topics():
     return topics
 
 
-def proc_message(message):  
+def proc_message(message): 
     
     #variables
     pol = 0
@@ -115,67 +115,72 @@ def proc_message(message):
     ret_message = ''
     
     respuestas = dict_reply()
-    topics = dict_topics()
+    topics = dict_topics()    
     
-    #process    
-    blob = TextBlob(message)
-    blob = blob.translate(to='en').lower()    
-    pol = blob.sentiment[0]
-
-    for w in blob.words:
-        w = w.lemmatize()
-        if w in topics['gt']:
-            gt += 1
-
-    for w in blob.words:
-        w1 = w.lemmatize()
-        w2 = w
-        if (w1 in topics['jp']) or (w2 in topics['jp']):
-            topic_l[0] += 1
-        if (w1 in topics['c']) or (w2 in topics['c']):
-            topic_l[1] += 1
-        if (w1 in topics['rrhh']) or (w2 in topics['rrhh']):   
-            topic_l[2] += 1
-        if (w1 in topics['iess']) or (w2 in topics['iess']):    
-            topic_l[3] += 1
-        if (w1 in topics['js']) or (w2 in topics['js']):   
-            topic_l[4] += 1
-
-
-    blob_nouns = list()
-    for word, tag in blob.tags:
-        if tag == 'NN':
-            blob_nouns.append(word.lemmatize())
-
-
-    for n in blob_nouns:
-        if n in topics['pn']:
-            nouns[0] += 1
+    try:       
         
+        #process    
+        blob = TextBlob(message)
+        blob = blob.translate(to='en').lower()    
+        pol = blob.sentiment[0]
     
-    a  = np.argmax(topic_l)
+        for w in blob.words:
+            w = w.lemmatize()
+            if w in topics['gt']:
+                gt += 1
     
-    if nouns[0] > 0:
-        b = 1
-    else:
-        b = 0    
+        for w in blob.words:
+            w1 = w.lemmatize()
+            w2 = w
+            if (w1 in topics['jp']) or (w2 in topics['jp']):
+                topic_l[0] += 1
+            if (w1 in topics['c']) or (w2 in topics['c']):
+                topic_l[1] += 1
+            if (w1 in topics['rrhh']) or (w2 in topics['rrhh']):   
+                topic_l[2] += 1
+            if (w1 in topics['iess']) or (w2 in topics['iess']):    
+                topic_l[3] += 1
+            if (w1 in topics['js']) or (w2 in topics['js']):   
+                topic_l[4] += 1
     
     
-    if max(topic_l) > 0:
-        r = respuestas[(a,b)]
-    elif gt > 0:
-        r = ''
-    else:
-        r = respuestas['NT']
+        blob_nouns = list()
+        for word, tag in blob.tags:
+            if tag == 'NN':
+                blob_nouns.append(word.lemmatize())
     
     
-    if pol < -0.05:
-        ret_message = respuestas['NP']    
-    else:
-        if gt > 0:
-            ret_message += respuestas['gret'] 
+        for n in blob_nouns:
+            if n in topics['pn']:
+                nouns[0] += 1
+            
         
-        ret_message += r
+        a  = np.argmax(topic_l)
         
+        if nouns[0] > 0:
+            b = 1
+        else:
+            b = 0    
+        
+        
+        if max(topic_l) > 0:
+            r = respuestas[(a,b)]
+        elif gt > 0:
+            r = ''
+        else:
+            r = respuestas['NT']
+        
+        
+        if pol < -0.05:
+            ret_message = respuestas['NP']    
+        else:
+            if gt > 0:
+                ret_message += respuestas['gret'] 
+            
+            ret_message += r
+            
+    except:
+        
+        ret_message =  respuestas['NT']   
     
     return ret_message

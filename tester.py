@@ -13,12 +13,13 @@ from text_processer import proc_message
 from textblob import TextBlob
 
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
-message = 'que mal servicio que dan' 
+#message = 'que mal servicio que dan' 
 #message = 'cuanto cuesta un estudio de pasivo laboral'  
 #message = 'cuanto cuesta un estudio de consultoria'
 #message = 'cuanto cuesta un esudio del iess'
 #message = 'hola'
 #message = 'mi nombre es roberto valdez'
+message = 'No'
 
 
 out_message = proc_message(message)
@@ -119,7 +120,8 @@ for i in range(5):
     
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
 #message = 'que mal servicio que dan' 
-message = 'cuanto cuesta un esudio del iess'
+#message = 'cuanto cuesta un esudio del iess'
+message = 'No'
     
 blob = TextBlob(message)
 blob = blob.translate(to='en').lower()    
