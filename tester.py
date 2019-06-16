@@ -23,19 +23,13 @@ from textblob import TextBlob
 
 #message = 'Hola, buenos dias, mi correo es roberto.valdez.ponce@gmail.com'
 
-message = 'es pesimo su servicio, mi correo es roberto.valdez.ponce@gmail.com'
+#message = 'es pesimo su servicio, mi correo es roberto.valdez.ponce@gmail.com'
+message = 'roberto.valdez.ponce@gmail.com'
 
 out_message = proc_message(message)
 out_message
 
 
-   
-#message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
-#message = 'que mal servicio que dan' 
-#message = 'cuanto cuesta un esudio del iess'
-#message = 'mi correo es roberto.valdez@gmail.com'
-#message = 'No'
-message = 'hola'
     
 blob = TextBlob(message)
 blob = blob.translate(to='en').lower()    
