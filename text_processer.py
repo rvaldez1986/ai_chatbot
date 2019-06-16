@@ -174,7 +174,7 @@ def proc_message(message):
             else:
                 ret_message += respuestas['em1'] 
         else:
-            if max(topic_l) > 0:                          #it there is a topic found
+            if max(topic_l) > 0:                          #if there is a topic found
                 ret_message += respuestas[(a,b)]
                 if email > 0:
                     ret_message += respuestas['em2']
@@ -187,8 +187,16 @@ def proc_message(message):
          
                 
     #In case of errors:        
-    except:
-        
-        ret_message =  respuestas['NT'] + respuestas['em1']
+    except:        
+        try:
+            for s in message:                  #maybe its just an email, not able to be translated
+                if s in topics['em']:
+                    email += 1
+            if email > 0:
+                ret_message =  respuestas['em2']    
+            else:
+                ret_message =  respuestas['NT'] + respuestas['em1']
+        except:
+            ret_message =  respuestas['NT'] + respuestas['em1']
     
     return ret_message
