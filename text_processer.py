@@ -156,21 +156,21 @@ def proc_message(message):
         if nouns[0] > 0:
             b = 1         #b says if the text contains something related to price              
         
-        #ASSIGN REPLY
-        if max(topic_l) > 0:
-            r = respuestas[(a,b)]
-        elif gt > 0:
-            r = ''
-        else:
-            r = respuestas['NT']  #r, if topic exists, assign topic response, otherwise if not greeting has the no topic NT 
-                
+        #ASSIGN REPLY        
         if pol < -0.05:
             ret_message = respuestas['NP']    
         else:
             if gt > 0:
-                ret_message += respuestas['gret'] 
-            
-            ret_message += r     #ret_message if negative polarity, np message, else add greeting + topic message
+                ret_message += respuestas['gret']  #add greeting
+                
+            if max(topic_l) > 0:
+                r = respuestas[(a,b)]
+            elif gt > 0:
+                r = ''
+            else:
+                r = respuestas['NT']  #r, if topic exists, assign topic response, otherwise if not greeting has the no topic NT 
+                
+            ret_message += r     #ret_message if negative polarity, np message, else add greeting and\or topic message
             
     except:
         
