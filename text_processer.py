@@ -156,7 +156,7 @@ def proc_message(message):
         if nouns[0] > 0:
             b = 1         #b says if the text contains something related to price              
         
-        #ASSIGN REPLY        
+        #ASSIGN REPLY  (pol, gt, topic_l)      
         if pol < -0.05:
             ret_message = respuestas['NP']    
         else:
