@@ -15,10 +15,10 @@ from flask import Flask, request
 from pymessenger.bot import Bot
 from text_processer import proc_message
 
-context = defaultdict(lambda: (int, str, float, str))
+users_dict = defaultdict(lambda: [0, None, None, None])
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBAKNuBqqdOllvxiDpIcWIKCJOEVHXj44AGQhhx9qyUeGOukYzIC0ynEA38PJnpayTJmZBRWFrzpphLIA2JjpBwfPt1EmOAzPWSZBFe8EVLzmLIsBk894KU0S9wLkAH4RNYdnAgiugQ9NhfLh18N1AQZAu2sHygZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBACfXTGRZCLZAmFchCSeKZAc3ACzBxh3AqGSW8K7N144T9j8nU9u87KwQYjSkrDbwuTU70UzsZCj4vS2Lj0UvExVn1AUrfCTiw7xrMnNbwxqZBuogVddvNQm57iirMJlR7yvs9TSlwu5dfuoNS7f7y3zCDUfj2iwZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 
@@ -42,15 +42,14 @@ def receive_message():
                 recipient_id = x['sender']['id']
                 if x['message'].get('text'):
                     in_message = x['message']['text']
-                    out_message = proc_message(in_message)
+                    context = users_dict[recipient_id]
+                    out_message, context = proc_message(in_message, context)
                     bot.send_text_message(recipient_id, out_message)
+                    users_dict[recipient_id] = context
                 #if user sends us a GIF, photo,video, or any other non-text item
                 if x['message'].get('attachments'):
                     out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
-                    bot.send_text_message(recipient_id, out_message)
-    
-        
-    
+                    bot.send_text_message(recipient_id, out_message)  
     
     return "Message Processed"
 
