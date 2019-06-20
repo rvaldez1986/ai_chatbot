@@ -10,9 +10,12 @@ module_path = os.path.abspath(os.path.join('..'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
+from collections import defaultdict
 from flask import Flask, request
 from pymessenger.bot import Bot
 from text_processer import proc_message
+
+context = defaultdict(lambda: (int, str, float, str))
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAfYg8rcb0UBAKNuBqqdOllvxiDpIcWIKCJOEVHXj44AGQhhx9qyUeGOukYzIC0ynEA38PJnpayTJmZBRWFrzpphLIA2JjpBwfPt1EmOAzPWSZBFe8EVLzmLIsBk894KU0S9wLkAH4RNYdnAgiugQ9NhfLh18N1AQZAu2sHygZDZD'
