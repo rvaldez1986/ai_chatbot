@@ -51,7 +51,7 @@ def dict_reply():
                     
     #Greeting message
     repgret = ('Hola, mi nombre es eC-BOT y soy un chatbot con inteligencia artificial elaborado por la '
-             'division Actuaria-ai. ')  
+             'division de Actuaria-ai. ')  
     
     #Email messages
     repem1 = ('Nos puede tambien dejar su correo electronico en este chat y nos contactaremos directamente con usted. ')
