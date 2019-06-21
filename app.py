@@ -18,7 +18,7 @@ from text_processer import proc_message
 users_dict = defaultdict(lambda: [0, None, None, None])
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBACfXTGRZCLZAmFchCSeKZAc3ACzBxh3AqGSW8K7N144T9j8nU9u87KwQYjSkrDbwuTU70UzsZCj4vS2Lj0UvExVn1AUrfCTiw7xrMnNbwxqZBuogVddvNQm57iirMJlR7yvs9TSlwu5dfuoNS7f7y3zCDUfj2iwZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBANepyQhlz3sxwnIQbfBkZCELYLNXkpzgjiI5tkoKqztIHrw0qAejVNzN6qIrwjEp0U4h9heuqZCBqEYjxrBKKlZBTG9rNzH8Gi5yZAoXq6pJ0UZC7bbVkAaZBHdWqwOYCMwaTZB33OZBG4gRwWZCzDYREgSzClXSZARAZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
 
