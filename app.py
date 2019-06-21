@@ -53,21 +53,15 @@ class Messenger(BaseMessenger):
             recipient_id: recipient id to send to
             message: message to send
         Output:
-            Response from API as <dict>
-        """
-        return self.send_message(recipient_id, {'text': message}, notification_type)
-       
-    def send_message(self, recipient_id, message, notification_type='REGULAR'):
-        return self.send_recipient(recipient_id, {'message': message}, notification_type)     
+            Response from API as <dict>      """        
         
-    def send_recipient(self, recipient_id, payload, notification_type='REGULAR'):
+        payload = {'message': {'text': message}}         
+    
         payload['recipient'] = {
             'id': recipient_id
         }
         payload['notification_type'] = notification_type        
-        return self.send_raw(payload)
-            
-    def send_raw(self, payload):
+     
         request_endpoint = '{0}/me/messages'.format(self.client.graph_url)
         response = requests.post(
             request_endpoint,
@@ -89,7 +83,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAAgfT4tZAUDk6jx8tSEoXJK2gZCfJQ6MHopIbA526ggO97Ax8sYqEbyrb2Xun0iPLQgGugH8N0IxSEI5WZABGXPNyp4ZBJI7VZBWNx4WDZB3rWRE3oGHZBVXs1wlpY7wfdbWZCxmZCZCMccuJlWgBEQbBKOCHdQZBe4YgZDZD'
+FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAHCWcZBsRQvX21pENE5ruZAa00ZA7nI7ZCTOcxXPRoZCVHE7UnpgdSaDUxWbRXtJjB15KzVQnlZAA9d3KjrwPnYE6NL3jgpdCneZBb0ZCvRZCMwg6tcqINWFUfs4O9ZAsbE6abkmzZAqzWg3ZAAx5XK9tNoIgRclHX9veQZDZD'
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
