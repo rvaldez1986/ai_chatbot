@@ -18,9 +18,11 @@ from text_processer import proc_message
 users_dict = defaultdict(lambda: [0, None, None, None])
 
 app = Flask(__name__)
-ACCESS_TOKEN = 'EAAfYg8rcb0UBANepyQhlz3sxwnIQbfBkZCELYLNXkpzgjiI5tkoKqztIHrw0qAejVNzN6qIrwjEp0U4h9heuqZCBqEYjxrBKKlZBTG9rNzH8Gi5yZAoXq6pJ0UZC7bbVkAaZBHdWqwOYCMwaTZB33OZBG4gRwWZCzDYREgSzClXSZARAZDZD'
+ACCESS_TOKEN = 'EAAfYg8rcb0UBAGL9NNwwYoLnrNN28F3xGPZAB4We1aSxmZB3XSdbOThGCk5ZBSJHidP0pb4UoHy8fS9EEVTmn0RqyAVbdcUPvrYxTIjvvAccaMWwEsUoe7QWbZBHpQXUj1EhIaGSsdPn8dWtMX2DZByXwGvEknBHRoZAsDAqjaUwZDZD'
 VERIFY_TOKEN = 'VERIFY_TOKEN'
 bot = Bot(ACCESS_TOKEN)
+#bot.set_greeting_text('Buenos Dias')
+#bot.set_get_started_button_payload("HELP")
 
 #We will receive messages that Facebook sends our bot at this endpoint 
 @app.route("/", methods=['GET', 'POST'])
