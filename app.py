@@ -14,10 +14,18 @@ if module_path not in sys.path:
 
 from flask import Flask, request
 from fbmessenger import BaseMessenger
-from fbmessenger.thread_settings import GreetingText, GetStartedButton, MessengerProfile
+from fbmessenger.thread_settings import GreetingText,  MessengerProfile
 from collections import defaultdict
 from text_processer import proc_message
 import requests
+
+class GetStartedButton(object):
+    def __init__(self, payload):
+        self.payload = payload
+        
+    def to_dict(self):
+        payload = {'payload': self.payload}   
+        return payload
 
 
 class Messenger(BaseMessenger):
@@ -56,15 +64,7 @@ class Messenger(BaseMessenger):
         return "Message Processed"
     
       
-    def send_text_message(self, recipient_id, message, notification_type='REGULAR'):
-        """Send text messages to the specified recipient.
-        https://developers.facebook.com/docs/messenger-platform/send-api-reference/text-message
-        Input:
-            recipient_id: recipient id to send to
-            message: message to send
-        Output:
-            Response from API as <dict>      """        
-        
+    def send_text_message(self, recipient_id, message, notification_type='REGULAR'):      
         payload = {'message': {'text': message}}         
     
         payload['recipient'] = {
@@ -93,7 +93,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = ''
+FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAFk5SBQgIJ5zCYHAuKT83ZArpj9QbTlidONZBmCIZBeq7NRenr2gCzk1hqBWLoRNDVvPBL2SYHgeroZBPZANJt2MuoHfgZB46EtTqeApiMk2lnYHJ73YwzfgrjJSxiNtRT4ZBOP5Kxf7Ky73qJsiGkAt1G8waAgXgZDZD'
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
