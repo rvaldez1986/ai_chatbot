@@ -32,6 +32,14 @@ class Messenger(BaseMessenger):
     def __init__(self, page_access_token, **kwargs):
         super(Messenger, self).__init__(page_access_token)
         self.users_dict = defaultdict(lambda: [0, None, None, None]) 
+        self.pop_mdict()        
+    
+    def pop_mdict(self):
+        self.message_dict = {}
+        self.message_dict['GT'] = 'Welcome to weather bot'
+        self.message_dict['RG'] = 'Hola yo soy su chatbot'
+        self.message_dict['DOC'] = 'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'       
+        
         
     def handle(self, payload):
         for entry in payload['entry']:
@@ -45,7 +53,7 @@ class Messenger(BaseMessenger):
         payload = message['postback']['payload']
         recipient_id = message['sender']['id']
         if 'start' in payload: 
-            out_message =  'Hola yo soy su chatbot'
+            out_message =  self.message_dict['RG']
             self.send_text_message(recipient_id, out_message)            
         
     def receive_message(self, message):                 
@@ -59,7 +67,7 @@ class Messenger(BaseMessenger):
             self.users_dict[recipient_id] = context
         #if user sends us a GIF, photo,video, or any other non-text item
         if message['message'].get('attachments'):
-            out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
+            out_message =  self.message_dict['DOC']
             self.send_text_message(recipient_id, out_message) 
         return "Message Processed"
     
@@ -83,7 +91,7 @@ class Messenger(BaseMessenger):
     
 
     def init_bot(self):
-        greeting_text = GreetingText('Welcome to weather bot')
+        greeting_text = GreetingText(self.message_dict['GT'])
         messenger_profile = MessengerProfile(greetings=[greeting_text])
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
@@ -93,7 +101,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAFk5SBQgIJ5zCYHAuKT83ZArpj9QbTlidONZBmCIZBeq7NRenr2gCzk1hqBWLoRNDVvPBL2SYHgeroZBPZANJt2MuoHfgZB46EtTqeApiMk2lnYHJ73YwzfgrjJSxiNtRT4ZBOP5Kxf7Ky73qJsiGkAt1G8waAgXgZDZD'
+FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAFwATyy3SpiXbp2eNV1X7sqnoAbacFHxHN3jCs6Jn4EwZBoHi0FgddhQgoYcoGqAf254YarlBqf6Ebd6NlF7PZAV4MDyrBDvZCfDJhAoQPZBfabKhD2KyLHJ5JDEUKFdroFt5JZALwjGjZBxHVlRuplHoXaCAxeAZDZD'
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
