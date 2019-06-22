@@ -25,25 +25,35 @@ class Messenger(BaseMessenger):
         super(Messenger, self).__init__(page_access_token)
         self.users_dict = defaultdict(lambda: [0, None, None, None]) 
         
-    def receive_message(self, output): 
-        for event in output['entry']:
-            messaging = event['messaging']
-            for x in messaging:
-                if x.get('message'):
-                    #Facebook Messenger ID for user so we know where to send response back to
-                    recipient_id = x['sender']['id']
-                    if x['message'].get('text'):
-                        in_message = x['message']['text']
-                        context = self.users_dict[recipient_id]
-                        out_message, context = proc_message(in_message, context)
-                        self.send_text_message(recipient_id, out_message)
-                        self.users_dict[recipient_id] = context
-                #if user sends us a GIF, photo,video, or any other non-text item
-                    if x['message'].get('attachments'):
-                        out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
-                        self.send_text_message(recipient_id, out_message) 
-        return "Message Processed"        
+    def handle(self, payload):
+        for entry in payload['entry']:
+            for message in entry['messaging']:
+                if message.get('message'):
+                    return self.receive_message(message)
+                elif message.get('postback'):
+                    return self.postback(message)
 
+    def postback(self, message):
+        payload = message['postback']['payload']
+        recipient_id = message['sender']['id']
+        if 'start' in payload: 
+            out_message =  'Hola yo soy su chatbot'
+            self.send_text_message(recipient_id, out_message)            
+        
+    def receive_message(self, message):                 
+        #Facebook Messenger ID for user so we know where to send response back to
+        recipient_id = message['sender']['id']
+        if message['message'].get('text'):
+            in_message = message['message']['text']
+            context = self.users_dict[recipient_id]
+            out_message, context = proc_message(in_message, context)
+            self.send_text_message(recipient_id, out_message)
+            self.users_dict[recipient_id] = context
+        #if user sends us a GIF, photo,video, or any other non-text item
+        if message['message'].get('attachments'):
+            out_message =  'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'
+            self.send_text_message(recipient_id, out_message) 
+        return "Message Processed"
     
       
     def send_text_message(self, recipient_id, message, notification_type='REGULAR'):
@@ -83,7 +93,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAHCWcZBsRQvX21pENE5ruZAa00ZA7nI7ZCTOcxXPRoZCVHE7UnpgdSaDUxWbRXtJjB15KzVQnlZAA9d3KjrwPnYE6NL3jgpdCneZBb0ZCvRZCMwg6tcqINWFUfs4O9ZAsbE6abkmzZAqzWg3ZAAx5XK9tNoIgRclHX9veQZDZD'
+FB_PAGE_TOKEN = ''
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
@@ -99,9 +109,17 @@ def webhook():
             return request.args.get('hub.challenge')
         raise ValueError('FB_VERIFY_TOKEN does not match.')
     elif request.method == 'POST':
-        messenger.receive_message(request.get_json())
+        messenger.handle(request.get_json())
     return ''
 
 
 if __name__ == '__main__':
     app.run()
+    
+    
+    
+#https://www.idiotinside.com/2017/12/22/facebook-messenger-bot-get-started-quick-reply-python/
+#https://github.com/rehabstudio/fbmessenger/blob/master/fbmessenger
+#https://github.com/davidchua/pymessenger/blob/master/pymessenger/bot.py   
+    
+    
