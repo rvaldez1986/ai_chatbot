@@ -36,8 +36,8 @@ class Messenger(BaseMessenger):
     
     def pop_mdict(self):
         self.message_dict = {}
-        self.message_dict['GT'] = 'Welcome to weather bot'
-        self.message_dict['RG'] = 'Hola yo soy su chatbot'
+        self.message_dict['GT'] = 'Chatbot actuarial con ia'
+        self.message_dict['RG'] = 'Hola yo soy su chatbot, digame cualquier cosa'
         self.message_dict['DOC'] = 'Gracias por los documentos, los analizaremos y nos contactaremos con usted.'       
         
         
@@ -101,7 +101,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAFwATyy3SpiXbp2eNV1X7sqnoAbacFHxHN3jCs6Jn4EwZBoHi0FgddhQgoYcoGqAf254YarlBqf6Ebd6NlF7PZAV4MDyrBDvZCfDJhAoQPZBfabKhD2KyLHJ5JDEUKFdroFt5JZALwjGjZBxHVlRuplHoXaCAxeAZDZD'
+FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAAOspqyfAdV5kuVGtiTZB42HVrjeZArg9NZBSZCe4kYKUcqzP8xBwAIczJK9t7xZA9woiZAXgjEd32bxIngQvrguV2rv9CdZC1B7Ke2kmZARud8eG22uxJg3yuO6ZBFLItteoyCJvi1m63R8UlpoA6GrKLudOaZB7SqAZDZD'
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
@@ -113,7 +113,7 @@ messenger = Messenger(FB_PAGE_TOKEN)
 def webhook():
     if request.method == 'GET':
         if request.args.get('hub.verify_token') == FB_VERIFY_TOKEN:
-            #messenger.init_bot()
+            messenger.init_bot()
             return request.args.get('hub.challenge')
         raise ValueError('FB_VERIFY_TOKEN does not match.')
     elif request.method == 'POST':
