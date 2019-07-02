@@ -5,11 +5,11 @@ Created on Fri Jun 21 13:35:59 2019
 @author: rober
 """
 
-import os
-import sys
-module_path = os.path.abspath(os.path.join('..'))
-if module_path not in sys.path:
-    sys.path.append(module_path)
+#import os
+#import sys
+#module_path = os.path.abspath(os.path.join('..'))
+#if module_path not in sys.path:
+#    sys.path.append(module_path)
     
 
 from flask import Flask, request
@@ -101,7 +101,7 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAAOspqyfAdV5kuVGtiTZB42HVrjeZArg9NZBSZCe4kYKUcqzP8xBwAIczJK9t7xZA9woiZAXgjEd32bxIngQvrguV2rv9CdZC1B7Ke2kmZARud8eG22uxJg3yuO6ZBFLItteoyCJvi1m63R8UlpoA6GrKLudOaZB7SqAZDZD'
+FB_PAGE_TOKEN = 'EAAfYg8rcb0UBAMnJLFdoiprE1HxXlWUCfl9ZBnGUQnYX8pQlKLfdheqH2yI29u3mW7ugfSQIDr1cRONyXxXNceeqOpPZBcW7w47ngrASzvSjF9O1qjIaUTGhCqfTCXq4Xj8ifs1OVCRhvSKXZAXLLVB7E1ZCH0Hw3XgIADKRPQZDZD'
 FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
 
 app = Flask(__name__)
