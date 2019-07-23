@@ -24,7 +24,7 @@ class ChatraClient():
         self.agent_id = "bF9w7viEcHXbBFupx"
         self.headers = headers
         self.users_dict = defaultdict(lambda: [0, None, None, None]) 
-        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55"]
+        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55","15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1"]        
    
 
     @classmethod
@@ -35,17 +35,18 @@ class ChatraClient():
 
         })
     
-    def handle(self, payload):        
-        for m in payload.get('messages'):
-            if m['type'] == "client":   #we only respond to client messages for now (not agents)
-                if m['message']:
-                    self.parse_message(payload.get('eventName'), m['message'], payload.get('client')['id'])
+    def handle(self, payload):   
+        if payload.get('messages'):
+            for m in payload.get('messages'):
+                if m['type'] == "client":   #we only respond to client messages for now (not agents)
+                    if m['message']:
+                        self.parse_message(payload.get('eventName'), m['message'], payload.get('client')['id'])
                     
                     
     def parse_message(self, eventName, message, client_id):
-        #print(eventName)
-        #print(message)
-        #print(client_id)
+        print(eventName)
+        print(message)
+        print(client_id)
         
         if eventName == 'chatStarted' or eventName == 'chatFragment':        
             context = self.users_dict[client_id]
