@@ -21,10 +21,10 @@ class ChatraClient():
     # Initilizing
     def __init__(self, headers):
         self.base_api = "https://app.chatra.io/api"
-        self.agent_id = "bF9w7viEcHXbBFupx"
+        self.agent_id = "bF9w7viEcHXbBFupx"    #we only have one agent (daniela)
         self.headers = headers
         self.users_dict = defaultdict(lambda: [0, None, None, None]) 
-        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55","15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1"]        
+        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55", "15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1"]        
    
 
     @classmethod
@@ -46,13 +46,13 @@ class ChatraClient():
     def parse_message(self, eventName, message, client_id):
         print(eventName)
         print(message)
-        print(client_id)
+        print(client_id)              #we print info of people who communicate with chat (testing phase)
         
         if eventName == 'chatStarted' or eventName == 'chatFragment':        
-            context = self.users_dict[client_id]
+            context = self.users_dict[client_id]   #context for chat
             out_message, context = proc_message(message, context)
-            if client_id in self.test_users:
-                self.send_message(client_id, out_message, self.agent_id)
+            if client_id in self.test_users:   #only respond to test users (testing phase)
+                self.send_message(client_id, out_message, self.agent_id) 
             self.users_dict[client_id] = context
         
         
