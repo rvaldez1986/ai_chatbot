@@ -32,3 +32,13 @@ except Exception as e:
     print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 ####################################
+
+import nlp_functions as nlp
+
+q = 'Cuanto cuesta un estudio de jubilacion patronal?'
+topIn, entities = nlp.azure_q1(q)
+topIn
+
+
+    
+    

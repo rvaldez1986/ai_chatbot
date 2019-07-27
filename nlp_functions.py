@@ -13,6 +13,7 @@ from textblob import TextBlob
 import wikipedia
 import re
 from pattern.es import parse
+import requests
 
 
 tokenizer = RegexpTokenizer(r'\w+')
@@ -191,7 +192,7 @@ def proc_message2ST(message):
         ind = 0
         nlist = [s for s in re.findall(r'\b\d+\b', message)]
         for n in nlist:
-            if len(n) == 13:
+            if val_RUC(n):
                 ind += 1
         if ind == 1:
             ans = 'ok ruc'        
@@ -201,6 +202,44 @@ def proc_message2ST(message):
         ans = 'na'
         
     return ans
+
+
+def val_RUC(string):
+    if len(string) == 13:  #por ahora solo chequea el length
+        return True
+    else:
+        return False
+    
+
+
+def azure_q1(message):
+    headers = {
+            # Request headers
+            'Ocp-Apim-Subscription-Key': '55c4f6fd25a84e81bc2369845f18f9bf',
+    }
+
+    params ={
+            # Query parameter
+            'q': message,
+            # Optional request parameters, set to default values
+            'timezoneOffset': '-360',
+            'verbose': 'true',
+            'spellCheck': 'false',
+            'staging': 'false',
+    }
+
+
+    try:
+        r = requests.get('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/d8bd8e1e-7a79-4a00-aa99-4fbc8b1a8425',headers=headers, params=params)
+        payload = r.json()
+        #intents = payload['intents']  #en prox modelo se puede trabajar con probabilidades de intents, por ahora solo pasa max
+        entities = payload['entities']
+        topIntent = payload['topScoringIntent']['intent']
+        return (topIntent, entities)        
+
+    except Exception:
+        return ('None', None) 
+    
 
 
 def position(l, b, element):

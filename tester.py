@@ -20,7 +20,7 @@ users_dict = defaultdict(lambda: [0, None, None, None])
 #message = 'cuanto cuesta un estudio de pasivo laboral'  
 #message = 'cuanto cuesta un estudio de consultoria'
 #message = 'cuanto cuesta un esudio del iess'
-message = 'hola'
+#message = 'hola'
 #message = 'mi nombre es roberto valdez'
 #message = 'No'
 #message = 'mi correo es roberto.valdez.ponce@gmail.com'
@@ -29,9 +29,9 @@ message = 'hola'
 #message = 'roberto.valdez.ponce@gmail.com'
 
 
-recipient_id = 1
+message = 'Persona Natural'
 
-context = users_dict[recipient_id]
+context = [1,  'Jubilacion Patronal',  -0.024999999999999994,  'cuanto cuesta un estudio actuarial para una empresa pequena']
 out_message, context = proc_message(message, context)
 out_message
 context

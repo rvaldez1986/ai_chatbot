@@ -23,7 +23,7 @@ class ChatraClient():
         self.base_api = "https://app.chatra.io/api"
         self.agent_id = "bF9w7viEcHXbBFupx"    #we only have one agent (daniela)
         self.headers = headers
-        self.users_dict = defaultdict(lambda: [0, None, None, None]) 
+        self.users_dict = defaultdict(lambda: [0, None, None, None, None, 0]) 
         self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55", "15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1"]        
    
 

@@ -13,11 +13,12 @@ def dict_textos0():
     repQ   = ('Gracias por su retroalimentacion. En ACTUARIA queremos siempre dar el mejor servicio. '
               'Desea formalizar su queja?')    
     repHF  = ('Gracias por confiar en nosotros!')
-    repJS  = ('Gracias por su interes, puede enviar su cv y una carta motivacional al correo 123@actuaria.com.ec')
+    repJS  = ('Gracias por su interes, puede enviar su cv y una carta motivacional al correo 123@actuaria.com.ec')   
     repCN  = ('ACTUARIA tiene oficinas en quito y guayaquil. El telefono de quito es 2-501-001 y el telefono '
               'de Guayaquil es 2-501-001. La direccion de Quito es Orellana y 6 de Diciembre y en Guayaquil es '
               'Emilio Romero y Benjamin Carrion.')
     repGR  = ('Hola!')
+    repCHAR = ('Para charlas hay que desarrollar la info de horarios, hasta aca nomas esta hecho')
     repNT  = ('Hmm.. Este tema es relativo a ACTUARIA? O es de otro tema?')
     repCE  = ('Gracias por contactarnos, si desea deje su correo y/o numero de telefono y nos contactaremos con usted.')    
     
@@ -28,6 +29,7 @@ def dict_textos0():
     textos["job seeker"] = repJS
     textos["Contacto"] = repCN
     textos["Greeting"] = repGR
+    textos["Otros servicios (Charlas/Capacitaciones/Financiera)"] = repCHAR
     textos['NT'] = repNT
     textos['CE'] = repCE 
     
@@ -60,13 +62,14 @@ def dict_textos2():
     
     #REPLYS
     repST0  = ('Requiere el envio de una cotizacion?')
-    repST1  = ('Hasta aca nomas esta hecho')
-    repST2  = ('El RUC ingresado no es valido, puede ingresar el RUC de su empresa?')
+    repST1  = ('Requiere informacion sobre un proceso que actualmente esta realizando con ACTUARIA?')
+    repST2  = ('No se encontro intent, Hasta aca nomas esta hecho')
+    repST3  = ('El RUC ingresado no es valido, puede ingresar el RUC de su empresa?')
     repQ    = ('Muchas gracias por su tiempo. Vamos a analizar el contenido de sus comentarios y nos ponemos en '
               'contacto con usted')    
     
     #FILL DICT
-    textos["ST"] = [repST0, repST1, repST2]     
+    textos["ST"] = [repST0, repST1, repST2, repST3]     
     textos["Queja"] = repQ 
     
     
@@ -77,11 +80,13 @@ def dict_textos3():
     
     #REPLYS
     repST0  = ('Perfecto, nos puede dejar un nombre y un correo para contactarnos y enviar la propuesta de {0}?')
-    repST1  = ('Hasta aca nomas esta hecho')
-    repST2  = ('No entendi su respuesta, requiere envio de una cotizacion?')
+    repST1  = ('Aqui se debe hacer una consulta al API de KOHINOR')
+    repST2  = ('No se encontro intent, Hasta aca nomas esta hecho (se puede unir con estado anterior)')
+    repST3  = ('No entendi su respuesta, requiere envio de una cotizacion?')
+    repST4  = ('No entendi su respuesta, requiere informacion sobre un proceso que actualmente esta realizando con ACTUARIA?')
     
     #FILL DICT
-    textos["ST"] = [repST0, repST1, repST2]      
+    textos["ST"] = [repST0, repST1, repST2, repST3, repST4]      
     
     return textos
 
