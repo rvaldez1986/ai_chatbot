@@ -1,0 +1,20 @@
+https://www.twilio.com/blog/2017/12/facebook-messenger-bot-python.html
+
+Procedimiento
+
+If necessary remove all subscriptions
+Delete access token from python file
+save
+
+On facebook for developers:
+1) Select page, copy acess token
+2) paste in python file, save it
+3) run python app.py from command line (python app.py)
+4) run ngrok http 5000 from other command line
+5) copy url from ngrok and paste it in suscribe events
+6) add verify token and check messages, messaging_postbacks, message_deliveries, messaging_pre_checkouts boxes.
+7) subscribe page
+8) go to dashboard
+
+Open facebook msn and chat!
+
