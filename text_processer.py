@@ -155,7 +155,16 @@ def proc_message(message, context):
     else:  #ESTADO 4
         textos = txts.dict_textos4() 
         
-        ret_message = textos["ST"]            
+        message2 = textos["MSG"].format(message).encode('utf-8')
+        
+        
+        toaddr = "roberto.valdez@actuaria.com.ec"
+        ret = nlp.send_email(message2, toaddr)
+        
+        if ret == 'success':        
+            ret_message = textos["ST1"] 
+        else:
+            ret_message = textos["ST2"]
         context = [0, None, None, None, None, 0]     
         
     

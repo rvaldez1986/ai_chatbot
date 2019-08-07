@@ -14,6 +14,7 @@ import wikipedia
 import re
 from pattern.es import parse
 import requests
+import smtplib
 
 
 tokenizer = RegexpTokenizer(r'\w+')
@@ -371,5 +372,26 @@ def algo_clasificador(sentence):
         return 'Cotizacion'
     else:
         return 'Otra Cosa'
+    
+    
+def send_email(text, toaddr):
+    try:
+        fromaddr = "roberto.valdez@actuaria.com.ec"        
+        
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        #server.connect("smtp.gmail.com",465)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(fromaddr, "Actuaria2021")
+        server.sendmail(fromaddr, toaddr, text)
+        server.quit()
+        
+        ret = 'success'
+        
+    except:
+        ret = 'error'
+        
+    return ret
 
 

@@ -98,10 +98,17 @@ def dict_textos4():
     textos = {}    
     
     #REPLYS
-    repST  = ('Muchas gracias, nos contactaremos con usted en la brevedad posible')
+    repST1  = ('Muchas gracias, se ha enviado un correo a nuestro departamento de pricing con sus datos y '
+              'nos contactaremos con usted en la brevedad posible')
+    
+    repST2  = ('No se envio el correo')
+    
+    repMSG = ("\nSe envió al chatbot el requerimiento de una cotizacion con los siguientes datos: \n {0}")
     
     
     #FILL DICT
-    textos["ST"] = repST
+    textos["ST1"] = repST1
+    textos["ST2"] = repST2
+    textos["MSG"] = repMSG
     
     return textos
