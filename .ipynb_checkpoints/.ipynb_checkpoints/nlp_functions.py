@@ -14,7 +14,6 @@ import wikipedia
 import re
 from pattern.es import parse
 import requests
-import smtplib
 
 
 tokenizer = RegexpTokenizer(r'\w+')
@@ -88,13 +87,13 @@ def y_hat(p_greet, pol, max_topic):
 
 
 def predict_topic(sentence):
-    jbtopdict = np.load('Data\\jbtopdict.npy', allow_pickle=True).item()
-    rentopdict = np.load('Data\\rentopdict.npy', allow_pickle=True).item()
-    IESStopdict = np.load('Data\\IESStopdict.npy', allow_pickle=True).item()
-    CONTtopdict = np.load('Data\\CONTtopdict.npy', allow_pickle=True).item()
-    OStopdict = np.load('Data\\OStopdict.npy', allow_pickle=True).item()
-    CONStopdict = np.load('Data\\CONStopdict.npy', allow_pickle=True).item()
-    JStopdic = np.load('Data\\JStopdict.npy', allow_pickle=True).item()  
+    jbtopdict = np.load('Data\\jbtopdict.npy',allow_pickle=True).item()
+    rentopdict = np.load('Data\\rentopdict.npy',allow_pickle=True).item()
+    IESStopdict = np.load('Data\\IESStopdict.npy',allow_pickle=True).item()
+    CONTtopdict = np.load('Data\\CONTtopdict.npy',allow_pickle=True).item()
+    OStopdict = np.load('Data\\OStopdict.npy',allow_pickle=True).item()
+    CONStopdict = np.load('Data\\CONStopdict.npy',allow_pickle=True).item()
+    JStopdic = np.load('Data\\JStopdict.npy',allow_pickle=True).item()  
     
     sentence = trim_sent(sentence)
     
@@ -372,26 +371,5 @@ def algo_clasificador(sentence):
         return 'Cotizacion'
     else:
         return 'Otra Cosa'
-    
-    
-def send_email(text, toaddr):
-    try:
-        fromaddr = "roberto.valdez@actuaria.com.ec"        
-        
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        #server.connect("smtp.gmail.com",465)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(fromaddr, "Actuaria2021")
-        server.sendmail(fromaddr, toaddr, text)
-        server.quit()
-        
-        ret = 'success'
-        
-    except:
-        ret = 'error'
-        
-    return ret
 
 

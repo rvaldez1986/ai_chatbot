@@ -1,0 +1,7 @@
+#CHATRA
+https://github.com/aliahmet/chatra-io/blob/master/chatra.py
+https://stackoverflow.com/questions/48055427/selenium-webdriver-will-not-fully-load-page-python
+
+
+#WATSSAP
+https://github.com/danielcardeenas/whatsapp-framework

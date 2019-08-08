@@ -56,9 +56,10 @@ def proc_message(message, context):
                 ret_message = textos['NT']           #No topic, could be wikipedia
                 context = [1, 'NT', None, OM, None, context[5]+1]              
         
-        except:   
+        except Exception as b:   
             ret_message = textos['CE']
-            context = [0, None, None, None, None, 0]  
+            context = [0, None, None, None, None, 0]
+            print(b)
         
         
     elif context[0] == 1: #ESTADO 1
@@ -155,16 +156,7 @@ def proc_message(message, context):
     else:  #ESTADO 4
         textos = txts.dict_textos4() 
         
-        message2 = textos["MSG"].format(message).encode('utf-8')
-        
-        
-        toaddr = "roberto.valdez@actuaria.com.ec"
-        ret = nlp.send_email(message2, toaddr)
-        
-        if ret == 'success':        
-            ret_message = textos["ST1"] 
-        else:
-            ret_message = textos["ST2"]
+        ret_message = textos["ST"]            
         context = [0, None, None, None, None, 0]     
         
     
