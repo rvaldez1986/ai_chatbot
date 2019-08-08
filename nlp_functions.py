@@ -88,13 +88,13 @@ def y_hat(p_greet, pol, max_topic):
 
 
 def predict_topic(sentence):
-    jbtopdict = np.load('Data\\jbtopdict.npy').item()
-    rentopdict = np.load('Data\\rentopdict.npy').item()
-    IESStopdict = np.load('Data\\IESStopdict.npy').item()
-    CONTtopdict = np.load('Data\\CONTtopdict.npy').item()
-    OStopdict = np.load('Data\\OStopdict.npy').item()
-    CONStopdict = np.load('Data\\CONStopdict.npy').item()
-    JStopdic = np.load('Data\\JStopdict.npy').item()  
+    jbtopdict = np.load('Data\\jbtopdict.npy', allow_pickle=True).item()
+    rentopdict = np.load('Data\\rentopdict.npy', allow_pickle=True).item()
+    IESStopdict = np.load('Data\\IESStopdict.npy', allow_pickle=True).item()
+    CONTtopdict = np.load('Data\\CONTtopdict.npy', allow_pickle=True).item()
+    OStopdict = np.load('Data\\OStopdict.npy', allow_pickle=True).item()
+    CONStopdict = np.load('Data\\CONStopdict.npy', allow_pickle=True).item()
+    JStopdic = np.load('Data\\JStopdict.npy', allow_pickle=True).item()  
     
     sentence = trim_sent(sentence)
     
