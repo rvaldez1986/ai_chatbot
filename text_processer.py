@@ -67,13 +67,17 @@ def proc_message(message, context):
         if context[1] in ST:            
             res = nlp.proc_message1ST(message)            
             if res == "persona":
-                ret_message = textos["ST"][0].format(context[1])           #list in dictionary (ST has 3 messages)
+                url_sug = nlp.suggest_url(context[3], context[1])
+                if url_sug:
+                    ret_message = textos["ST"][0].format(context[1], url_sug)          
+                else:
+                    ret_message = textos["ST"][1].format(context[1]) 
                 context = [0, None, None, None, None, 0]      
             elif res == "empresa":
-                ret_message = textos["ST"][1]           #list in dictionary (ST has 3 messages)
+                ret_message = textos["ST"][2]           #list in dictionary (ST has 3 messages)
                 context = [2, context[1], context[2], context[3], None, context[5]+1]
             else:
-                ret_message = textos["ST"][2].format(context[1])           #list in dictionary (ST has 3 messages)
+                ret_message = textos["ST"][3].format(context[1])           #list in dictionary (ST has 3 messages)
                 context = [1, context[1], context[2], context[3], None, context[5]+1]
                 
         elif context[1] == "Queja":

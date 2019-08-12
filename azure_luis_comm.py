@@ -35,7 +35,7 @@ except Exception as e:
 
 import nlp_functions as nlp
 
-q = 'Cuanto cuesta un estudio de jubilacion patronal?'
+q = 'quisiera informacion actual de mi proceso de jubilacion patronal'
 topIn, entities = nlp.azure_q1(q)
 topIn
 

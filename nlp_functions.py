@@ -15,6 +15,11 @@ import re
 from pattern.es import parse
 import requests
 import smtplib
+import json
+import nltk
+from pattern.es import parsetree
+
+from urls import u_IESS, u_RDD, u_JP, u_CONS
 
 
 tokenizer = RegexpTokenizer(r'\w+')
@@ -394,4 +399,81 @@ def send_email(text, toaddr):
         
     return ret
 
+def hasNumbers(string):
+    return bool(re.search(r'\d', string))
 
+def hasBC(string):
+    i = string.find('/')
+    return bool(i != -1)
+
+def other_check(token):    
+    b1 = not hasNumbers(token)
+    b2 = not hasBC(token)
+    return (b1 and b2)
+
+
+def token_and_clean(texto):
+    palabras_funcionales = nltk.corpus.stopwords.words("spanish")    
+    tokens = nltk.word_tokenize(texto, "spanish")
+    tokens_limpios=[]
+    for token in tokens:        
+        if token not in palabras_funcionales:
+            if len(token) > 2 and token not in tokens_limpios:  #>2 helps in filtering out common
+                if other_check(token):
+                    tokens_limpios.append(token)
+    return tokens_limpios
+
+def stem_lemma(word):
+    stemmer = SnowballStemmer('spanish')
+    word = parsetree(word, lemmata=True)[0].lemmata[0]
+    word = stemmer.stem(word) 
+    return word
+
+
+
+def get_score(q, u, td):
+    dt = td[u][1]
+    dt2 = td[u][2]    
+    q_tokens =  token_and_clean(q.lower())
+    puntaje = 0
+    k = 1  #factor for header
+    for t in q_tokens:  
+        t = stem_lemma(t)
+        if t in dt:
+            puntaje += dt[t]
+        if t in dt2:
+            puntaje += dt[t] * k
+        
+    return puntaje  
+
+
+
+def suggest_url(question, topic):
+    
+    
+    try:    
+        texts_data = json.load(open("Data\\texts_data.txt"))        
+        ranking = []
+        
+        
+        if topic == "Jubilacion Patronal":
+            ulist = u_JP            
+        elif topic == "Renuncia/Despido/Desahucio":
+            ulist = u_RDD 
+        elif topic == "IESS":
+            ulist = u_IESS
+        else:
+            ulist = u_CONS 
+        
+        for u in ulist:
+            score = get_score(question, u, texts_data)
+            ranking.append(score)
+            
+        if np.max(ranking) > 0:
+            url_res = ulist[np.argmax(ranking)]
+            return url_res
+        else:
+            return None           
+        
+    except:
+        return None  

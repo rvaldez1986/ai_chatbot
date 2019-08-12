@@ -40,9 +40,12 @@ def dict_textos1():
     
     #REPLYS
     repST0   = ('Actuaria esta dirigida principalmente a servicio de empresas, sin embargo para el tema {0} esta a '
-                'disposicion los siguientes links y blogs: www.actuaria.com.ec\link1')
-    repST1   = ('Por favor puede ingresar el RUC de su empresa?')
-    repST2   = ('No entendi. Su consulta sobre el tema {0} es para una persona natural o de una empresa?')    
+                'disposicion los siguientes links y blogs: {1} o si desea realizar simulaciones y calculos por favor '
+                'dirijase a el siguiente link: https://actuaria.com.ec/simuladores/')
+    repST1   = ('Actuaria esta dirigida principalmente a servicio de empresas, sin embargo para el tema {0} si desea '
+                'realizar simulaciones y calculos por favor dirijase a el siguiente link: https://actuaria.com.ec/simuladores/')    
+    repST2   = ('Por favor puede ingresar el RUC de su empresa?')
+    repST3   = ('No entendi. Su consulta sobre el tema {0} es para una persona natural o de una empresa?')    
     repQ0    = ('Si quere anadir algo a su queja, esto sera analizado directamente por el departamento de satisfaccion '
                 'del cliente. De manera adicional nos puede incluir un correo electronico para contactarnos con usted.')  
     repQ1    = ('Gracias por sus comentarios, lo tendremos en cuenta para nuestro proceso de mejora continua.')  
@@ -51,7 +54,7 @@ def dict_textos1():
     repNT1   = ('No entendi su respuesta, el tema es relativo a ACTUARIA o a otro tema?')
     
     #FILL DICT  
-    textos["ST"] = [repST0, repST1, repST2] 
+    textos["ST"] = [repST0, repST1, repST2, repST3] 
     textos["Queja"] = [repQ0, repQ1, repQ2] 
     textos['NT'] = [repNT0, repNT1]    
     
