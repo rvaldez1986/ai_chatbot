@@ -4,7 +4,7 @@ Created on Sat Jun 15 14:20:15 2019
 
 @author: rober
 """
-
+#context = [Estado: 0, Topic: NA, Polarity: NA, OM: NA, Intent: NA, Counter: 0, RUC:NA, Numproc:NA]  
 import os
 os.chdir('C:\\Users\\rober\\desktop\\ai_chatbot')
     
@@ -12,11 +12,12 @@ from text_processer import proc_message
 from collections import defaultdict
 from textblob import TextBlob
 
-users_dict = defaultdict(lambda: [0, None, None, None])
+
+users_dict = defaultdict(lambda: [0, None, None, None, None, 0,None,None])
 
 
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
-#message = 'que mal servicio que dan' 
+#message = "quisiera informacion de mi proceso de jubilacion patronal"
 #message = 'cuanto cuesta un estudio de pasivo laboral'  
 #message = 'cuanto cuesta un estudio de consultoria'
 #message = 'cuanto cuesta un esudio del iess'
@@ -28,10 +29,26 @@ users_dict = defaultdict(lambda: [0, None, None, None])
 #message = 'es pesimo su servicio, mi correo es roberto.valdez.ponce@gmail.com'
 #message = 'roberto.valdez.ponce@gmail.com'
 
+#message = 'Persona Natural'
 
-message = 'Persona Natural'
+#flujo de conversacion prueba
 
-context = [1,  'Jubilacion Patronal',  -0.024999999999999994,  'cuanto cuesta un estudio actuarial para una empresa pequena']
+#message = "quisiera informacion de mi proceso de jubilacion patronal"
+#context = [0,None,None,None,None,0,None,None]
+
+#context = [1,'Jubilacion Patronal',0.0,'quisiera informacion de mi proceso de jubilacion patronal',None,1,None,None]
+#message = "empresa"
+
+message= "55667"
+context = [4,"Jubilacion Patronal",0.0, 'quisiera informacion de mi proceso de jubilacion patronal',None,2,"0190333515001",None]
+
+#message= "123456789123"
+#context = [,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001",None]
+
+#context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001",None]
+
+
+
 out_message, context = proc_message(message, context)
 out_message
 context

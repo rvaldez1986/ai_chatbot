@@ -35,7 +35,7 @@ def dict_textos0():
     
     return textos
 
-def dict_textos1():    
+def dict_textos1():   
     textos = {} 
     
     #REPLYS
@@ -83,21 +83,38 @@ def dict_textos3():
     
     #REPLYS
     repST0  = ('Perfecto, nos puede dejar un nombre y un correo para contactarnos y enviar la propuesta de {0}?')
-    repST1  = ('Aqui se debe hacer una consulta al API de KOHINOR')
-    repST2  = ('No se encontro intent, Hasta aca nomas esta hecho (se puede unir con estado anterior)')
-    repST3  = ('No entendi su respuesta, requiere envio de una cotizacion?')
-    repST4  = ('No entendi su respuesta, requiere informacion sobre un proceso que actualmente esta realizando con ACTUARIA?')
-    
+    repST1  = ('Hola {0} ¿por favor puede ingresar el numero del proceso enviado al correo de la persona encargada en su empresa?')
+    repST2  = ('Oppps, no puedo encontrar su RUC en el sistema. Por favor contactenos al (02) 2501001 para ayudarle inmediatamente')
+    repST3  = ('No se puedo entender su requerimiento, por favor contactarse al (02)-2501001')    
+    repST4  = ('No entendi su respuesta, requiere envio de una cotizacion?')
+    repST5  = ('No entendi su respuesta, requiere informacion sobre un proceso que actualmente esta realizando con ACTUARIA?')
     #FILL DICT
-    textos["ST"] = [repST0, repST1, repST2, repST3, repST4]      
+    textos["ST"] = [repST0, repST1, repST2, repST3, repST4, repST5]      
     
     return textos
 
 
-
-
-
 def dict_textos4():
+    textos = {}    
+    
+    #REPLYS
+    repMSG = ("\nSe envió al chatbot el requerimiento de una cotizacion con los siguientes datos: \n {0}")
+    repMSG1  = ('Muchas gracias, se ha enviado un correo a nuestro departamento de pricing con sus datos y '
+              'nos contactaremos con usted en la brevedad posible')    
+    repMSG2  = ('No se envio el correo a el area de pricing, hasta aca esta hecho')    
+    
+    
+    repST  = ('Estimado {0} Su proceso se encuentra {1}, el encargado de su estudio es {2}, Los datos de contacto son email: {3}. Telefono (02)-2501001 extension {4}')
+    repST1  = ('Su numero de proceso no es correcto. Por favor comuniquese al (02) 2501001')    
+    repST2  = ('Numero de Proceso incorrecto, por favor ingrese nuevamente su proceso:')
+    #FILL DICT
+    textos["ST"] = [repST, repST1, repST2]
+    textos["MSG"] = [repMSG, repMSG1, repMSG2]
+    
+    return textos
+
+
+def dict_textos5():
     textos = {}    
     
     #REPLYS

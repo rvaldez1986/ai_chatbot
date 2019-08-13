@@ -90,7 +90,7 @@ def webhook():
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        chatra.handle(request.get_json())
+       chatra.handle(request.get_json())
     return ''
 
 
