@@ -86,7 +86,7 @@ def y_hat(p_greet, pol, max_topic):
                        5: "Consultoria", 6: "job seeker"}    
     if pol<0 and max_topic == -1:
         ret = "Queja"
-    elif pol <= -0.65:
+    elif pol <= -0.45:
         ret = "Queja"
     elif p_greet>= 0.5:
         ret = "Greeting"
@@ -128,7 +128,7 @@ def predict_topic(sentence):
     
     return (yhat, pol, sentence)
 
-predict_topic("HOLA QUIERO UN ESTUDIO DE JUBILACION PATRONAL")
+
 
 def proc_wiki(message):
     try:
@@ -223,7 +223,7 @@ def val_RUC(string):
     else:
         return False
 
-proc_message2ST("mi ruc es 0104222146001")
+
         
 def proc_message_pro(message):
     try:
@@ -279,7 +279,7 @@ def azure_q1(message):
         return ('None',None)
         print(p)
         
-azure_q1("quisiera informacion de mi proceso actual en desarrollo de jubilacion patronal")     
+ 
         
     
 

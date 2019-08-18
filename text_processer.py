@@ -144,8 +144,16 @@ def proc_message(message, context):
                 ret_message = textos["ST"][3]   #puede repetir, ingrese su ruc           
                 context = [2, context[1], context[2], context[3], None, context[5]+1, None, None]
         else:
-            ret_message = textos["Queja"]          
-            context = [0, None, None, None, None, 0, None, None]
+            message2 = textos["MSG"][0].format(message, context[3]).encode('utf-8')        
+            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+            ret = nlp.send_email(message2, toaddr)
+                    
+            if ret == 'success':        
+                ret_message = textos["MSG"][1]
+            else:
+                ret_message = textos["MSG"][2]
+            context = [0, None, None, None, None, 0, None, None]   
+            
 
     
     elif context[0] == 3:  #ESTADO 3
@@ -155,29 +163,29 @@ def proc_message(message, context):
         if res == "si":            
             if context[4] == 'reqCotizacion':
                 ret_message = textos["ST"][0].format(context[1])          
-                context = [5, context[1], context[2], context[3], context[4], context[5]+1,context[6],None]
+                context = [4, context[1], context[2], context[3], context[4], context[5]+1,context[6],None]
             
             else:
                 try:
                     razon_social, codigo_cliente = nlp.consulta_ruc(context[6]) #currProcessInfo
                 
                     if nlp.consulta_ruc(context[6])!="None":  
-                        ret_message = textos["ST"][1].format(razon_social)       
+                        ret_message = textos["KO"][0].format(razon_social)       
                         context = [4, context[1], context[2], context[3], context[4], context[5]+1, context[6], None]
                 
                 except Exception:
-                    ret_message=textos["ST"][2]
+                    ret_message=textos["KO"][1]
                     context = [0, None, None, None, None, 0, None, None]
         
         elif res == "no":
-            ret_message = textos["ST"][3]             
+            ret_message = textos["KO"][2]             
             context = [0, None, None, None, None, 0, None, None]
             
         else:  #answer (yes/no) not understood
             if context[4] == 'reqCotizacion':
-                ret_message = textos["ST"][4]             
+                ret_message = textos["ST"][1]             
             else:
-                ret_message = textos["ST"][5]    
+                ret_message = textos["ST"][2]    
             
             context = [3, context[1], context[2], context[3], context[4], context[5]+1, None, None]  #independiente del intent vuelve a 3
         
@@ -188,7 +196,7 @@ def proc_message(message, context):
         if context[4] == 'reqCotizacion':
             message2 = textos["MSG"][0].format(message).encode('utf-8')        
         
-            toaddr = "roberto.valdez@actuaria.com.ec"  #por ahora mi correo
+            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
             ret = nlp.send_email(message2, toaddr)
         
             if ret == 'success':        
@@ -210,19 +218,30 @@ def proc_message(message, context):
                     razon_social,codigoCliente = nlp.consulta_ruc(context[6])
                     
                     if  nlp.consulta_proc(context[7])!="None" and codigo_cliente_proc==codigoCliente:  
-                        ret_message = textos["ST"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)       
+                        ret_message = textos["KO"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)       
+                        
+                        message2 = textos["KO"][3].format(message,context[3],razon_social,estado_proceso,codigo_cliente_proc).encode('utf-8')        
+                        toaddr="sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                        ret = nlp.send_email(message2, toaddr)
+                        if ret == 'success':        
+                            ret_message = textos["KO"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)
+                        else:
+                            ret_message = textos["KO"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)
+                        
+                        
                         context = [0, None, None, None, None, 0, None, None]
+
                     
                     else: 
-                        ret_message = textos['ST'][1]
+                        ret_message = textos['KO'][1]
                         context = [0, None, None, None, None, 0, None, None]
                         
                 except Exception as b:   
-                        ret_message = textos['ST'][1]
+                        ret_message = textos['KO'][1]
                         context = [0, None, None, None, None, 0, None, None]
                         print(b)  
             else:
-                        ret_message = textos['ST'][2]             
+                        ret_message = textos['KO'][2]             
                         context = [4, context[1], context[2], context[3], context[4], context[5]+1, context[6], None]
                        
     

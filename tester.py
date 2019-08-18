@@ -39,8 +39,9 @@ users_dict = defaultdict(lambda: [0, None, None, None, None, 0,None,None])
 #context = [1,'Jubilacion Patronal',0.0,'quisiera informacion de mi proceso de jubilacion patronal',None,1,None,None]
 #message = "empresa"
 
-message= "55667"
-context = [4,"Jubilacion Patronal",0.0, 'quisiera informacion de mi proceso de jubilacion patronal',None,2,"0190333515001",None]
+message= "55666"
+context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001",None]
+#context = [1,"Jubilacion Patronal",0.0, 'quisiera informacion del calculo de jubilacion patronal',None,None,None,None]
 
 #message= "123456789123"
 #context = [,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001",None]
