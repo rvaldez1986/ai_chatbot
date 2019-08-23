@@ -6,128 +6,201 @@ Created on Mon Jul  1 20:53:27 2019
 """
 
 import numpy as np
-from nltk.tokenize import RegexpTokenizer
 from nltk.stem import SnowballStemmer
 import unidecode
 from textblob import TextBlob
 import wikipedia
 import re
-from pattern.es import parse, parsetree
+from pattern.es import parsetree
 import requests
 import smtplib
 import json
 import nltk
 
+from urls import u_IESS, u_RDD, u_JP, u_CONS, u_OS
 
-from urls import u_IESS, u_RDD, u_JP, u_CONS
-
-
-
-
-
-
-tokenizer = RegexpTokenizer(r'\w+')
 stemmer = SnowballStemmer("spanish")
+palabras_funcionales = nltk.corpus.stopwords.words("spanish")    
 base_url= "http://192.168.1.15:8080/actuaria-business/api"
+
+
 
 def trim_sent(sentence):    
     return ' '.join(sentence.split())
 
 
-def top_likelihood(t_dict, sentence):
-    lik = -1
-    tokens = tokenizer.tokenize(unidecode.unidecode(sentence.lower()))
-    for w in tokens:
-        w = stemmer.stem(w)
-        if w in t_dict:
-            #print(w)
-            if lik == -1:
-                if t_dict[w] == 0:
-                    lik = -1
-                else:
-                    lik = t_dict[w]
+def prepare_text(text): 
+    try:
+        text = trim_sent(text).lower()
+        return text
+    except Exception as e:
+        print('Exception en prepare_text: {0}'.format(e))
+        return None       
+
+
+def hasNumbers(string):
+    return bool(re.search(r'\d', string))
+
+
+def hasBC(string):
+    i = string.find('/')
+    return bool(i != -1)
+
+
+def other_check(token):    
+    b1 = not hasNumbers(token)
+    b2 = not hasBC(token)
+    return (b1 and b2)
+
+
+def remove_accent(word):
+    return unidecode.unidecode(word)
+
+
+def stem_lemma(word):     
+    word = parsetree(word, lemmata=True)[0].lemmata[0]
+    word = stemmer.stem(word) 
+    return word
+
+
+def token_and_clean(texto): 
+    tokens = nltk.word_tokenize(texto, "spanish")
+    token_list = []
+    for token in tokens:        
+        if token not in palabras_funcionales:
+            token = stem_lemma(token)
+            token = remove_accent(token)
+            if len(token) >= 2 and other_check(token):
+                token_list.append(token)                
+        
+    return token_list   
+
+
+def vectorize_phrase(texto, vocab):
+    try:
+        tokens = token_and_clean(texto)
+        vector = np.zeros(len(vocab))
+        for t in tokens:
+            if t in vocab:
+                vector[vocab.index(t)] = 1
+        return vector
+    
+    except Exception as e:
+        print('Exception en vectorize_phrase: {0}'.format(e))
+        return None  
+    
+
+def n_token(sentence):
+    token_list = token_and_clean(sentence) 
+    return len(token_list) 
+
+
+def polarity_and_lang(message): #blob has a limit on api calls
+    
+    try:
+        if len(message) > 2:
+    
+            blob = TextBlob(message)    
+        
+            leng = blob.detect_language()
+            text = ''
+            if leng == 'es':
+                blob = blob.translate(to='en').lower() 
+                text = message
             else:
-                if t_dict[w] == 0:
-                    lik -= 1
-                else:
-                    lik += t_dict[w]
-    return lik
+                blob = blob.lower() 
+                text = blob.translate(to='es').lower().raw 
+            
+            pol = blob.sentiment[0]        
+        else:
+            print('Se paso a polarity_and_lang un texto menor que 3 caracters')
+            pol = 0
+            text = message            
+            
+        
+    except Exception as e:
+            print('Exception en polarity_and_lang: {0}'.format(e))
+            pol = 0
+            text = None            
+    
+    return (pol, text)
 
 
 def percent_greet(sentence):
-    tgreet = ['hol', 'buen', 'tard', 'dias', 'noch']
+    tgreet = ['hol', 'buen', 'tard', 'dia', 'noch']
     count = 0
-    tokens = tokenizer.tokenize(unidecode.unidecode(sentence.lower()))
-    for w in tokens:
-        w = stemmer.stem(w)
+    tokens = token_and_clean(sentence)
+    for w in tokens:       
         if w in tgreet:
-            count += 1            
-    return count/len(tokens) 
-
-
-def polarity(message): #blob has a limit on api calls
-    blob = TextBlob(message)
-            
-    if blob.detect_language() != 'en':
-        blob = blob.translate(to='en').lower() 
+            count += 1  
+    if len(tokens) > 0:
+        return count/len(tokens)
     else:
-        blob = blob.lower()            
-            
-    pol = blob.sentiment[0]
-    return pol
-
-def n_token(sentence):
-    tokens = tokenizer.tokenize(unidecode.unidecode(sentence.lower()))       
-    return len(tokens) 
-
-def y_hat(p_greet, pol, max_topic):
-    options = {-1: "na", 0: "Jubilacion Patronal", 1: "Renuncia/Despido/Desahucio", 
-                   2: "IESS", 3: "Contacto", 4: "Otros servicios (Charlas/Capacitaciones/Financiera)", 
-                       5: "Consultoria", 6: "job seeker"}    
-    if pol<0 and max_topic == -1:
-        ret = "Queja"
-    elif pol <= -0.45:
-        ret = "Queja"
-    elif p_greet>= 0.5:
-        ret = "Greeting"
-    elif max_topic == -1 and pol >= 0.9:
-        ret = "Hi Five"
-    else:
-        ret = options[max_topic]
-    return ret
+        return 0
 
 
+def pred_prob(text):
+    try:        
+    
+        vocab = np.load('Data\\vocab.npy', allow_pickle=True)
+        vocab = list(vocab)
+    
+        ldata = np.load('Data\\param_dict.npy', allow_pickle=True)
+        param_dict = ldata.item() 
+        W0 = param_dict[0].T
+        b0 = param_dict[1]
+        W1 = param_dict[2].T
+        b1 = param_dict[3]
+        
+        pol, text = polarity_and_lang(text)
+        
+        if text:
+    
+            x = vectorize_phrase(text, vocab)
+            if x.any():
+                x = np.append(x, n_token(text))
+                x = np.append(x, percent_greet(text))
+                x = np.append(x, pol)   
+    
+                h0 = np.matmul(x, W0) + b0
+                h1 = np.tanh(h0)
+                h2 = np.matmul(h1, W1) + b1
+                h3 = np.exp(h2)
+                prob = h3/np.sum(h3)
+        
+                return (prob, pol, text)  
+            else:
+                return(None, None, None)
+        
+        else:
+            return (None, None, None)
+    
+    except Exception as e:
+        print('Exception en predTop_prob: {0}'.format(e))
+        return (None, None, None)
+    
+    
 def predict_topic(sentence):
-    jbtopdict = np.load('Data\\jbtopdict.npy', allow_pickle=True).item()
-    rentopdict = np.load('Data\\rentopdict.npy', allow_pickle=True).item()
-    IESStopdict = np.load('Data\\IESStopdict.npy', allow_pickle=True).item()
-    CONTtopdict = np.load('Data\\CONTtopdict.npy', allow_pickle=True).item()
-    OStopdict = np.load('Data\\OStopdict.npy', allow_pickle=True).item()
-    CONStopdict = np.load('Data\\CONStopdict.npy', allow_pickle=True).item()
-    JStopdic = np.load('Data\\JStopdict.npy', allow_pickle=True).item()  
+    topics = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 
+                 'Greeting', 'Contacto', 'No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
+                      'Hi Five', 'job seeker', 'Facturacion/Retencion/Cobros']
     
-    sentence = trim_sent(sentence)
+    sentence = prepare_text(sentence)
     
-    jp = top_likelihood(jbtopdict, sentence)
-    ren = top_likelihood(rentopdict, sentence) 
-    iss = top_likelihood(IESStopdict, sentence) 
-    ct = top_likelihood(CONTtopdict, sentence) 
-    osl = top_likelihood(OStopdict, sentence) 
-    cons = top_likelihood(CONStopdict, sentence) 
-    js = top_likelihood(JStopdic, sentence)
+    try:
     
-    p_greet = percent_greet(sentence) 
-    pol = polarity(sentence)
-    
-    topic_l = np.array([jp,ren,iss,ct,osl,cons,js])
-    t  = np.argmax(topic_l)
-    v = topic_l[t]
-    max_topic = t if v>=0 else -1
-    
-    yhat = y_hat(p_greet, pol, max_topic) 
-    
-    return (yhat, pol, sentence)
-
+        if sentence:
+            prob, pol, text = pred_prob(sentence)
+            if prob.all():
+                return (topics[np.argmax(prob)], pol, text)
+            else:
+                return('No Topic', 0, None) 
+        else:
+            return('No Topic', 0, None) 
+            
+    except Exception as e:
+        print('Exception en predict_topic: {0}'.format(e))
+        return('No Topic', 0, None)  
 
 
 def proc_wiki(message):
@@ -280,140 +353,7 @@ def azure_q1(message):
         print(p)
         
  
-        
-    
-
-def position(l, b, element):
-    try:
-        p = l[b:].index(element)
-        return p
-    except:
-        return -1
-
-
-def cmin(*args):
-    a = np.array(list(args))
-    a = a[a>=0]
-    if len(a)>0:
-        return np.min(a)
-    else:
-        return -1
-    
-    
-def ext_algo1(sentence):  
-    words = []
-    
-    for s in parse(sentence.lower(), lemmata = True).split():        
-   
-        tags = [x[1] for x in s]
-        b = 0
-        
-        while b < len(tags) - 1:  
-            w_g = []
-            p = position(tags,b,'VB')
-            if p == -1:
-                break
-            else:        
-                w_g.append(s[b+p][4])
-                b = b + p + 1
-                while True:
-                    p1 = position(tags,b,'VB')
-                    p2 = position(tags,b,'NN')
-                    p3 = position(tags,b,'NNS')
-                    pm = cmin(p1,p2,p3)
-            
-                    if pm == -1:
-                        b = len(tags)
-                        break            
-                    elif p1 == pm:
-                        w_g.append(s[b+p1][4])#global pos
-                        b = b + p1 + 1
-                    elif p2 == pm:
-                        w_g.append(s[b+p2][4])
-                        b = b + p2 + 1
-                        break
-                    else:
-                        w_g.append(s[b+p3][4])
-                        b = b + p3 + 1
-                        break                 
-                words.append(w_g)
-        
-    return words   
-
-
-def ext_algo2(sentence):  
-    words = []
-    
-    for s in parse(sentence.lower(), lemmata = True).split():        
-   
-        tags = [x[1] for x in s]
-        b = 0
-        
-        while b < len(tags) - 1:  
-            w_g = []
-            p_1 = position(tags,b,'WP$')
-            p_2 = position(tags,b,'IN')
-            p = cmin(p_1,p_2)            
-            if p == -1:
-                break
-            else:        
-                w_g.append(s[b+p][4])
-                b = b + p + 1
-                while True:
-                    p1 = position(tags,b,'VB')
-                    p2 = position(tags,b,'NN')
-                    p3 = position(tags,b,'NNS')
-                    pm = cmin(p1,p2,p3)
-            
-                    if pm == -1:
-                        b = len(tags)
-                        break            
-                    elif p1 == pm:
-                        w_g.append(s[b+p1][4])#global pos
-                        b = b + p1 + 1
-                    elif p2 == pm:
-                        w_g.append(s[b+p2][4])
-                        b = b + p2 + 1
-                        break
-                    else:
-                        w_g.append(s[b+p3][4])
-                        b = b + p3 + 1
-                        break                 
-                words.append(w_g)
-        
-    return words   
-
-
-def class_palabra(lista):
-    tokens = ['costo',  'cotización', 'cotizar',  'cotizacion',  'precio']
-    r = 0
-    for l in lista:
-        if len(l)>0:
-            for w in l:
-                if w in tokens:            
-                    r = 1
-                    
-    tokens2 = ['necesitar','requerir','actualizar']
-    tokens3 = ['estudio', 'servicio']
-    
-    for l in lista:
-        if len(l) == 2:
-            if l[0] in tokens2 and l[1] in tokens3:
-                r =1                    
-        
-    return r
-
-def algo_clasificador(sentence):
-    lista1 = ext_algo1(sentence)
-    lista2 = ext_algo2(sentence)
-    lista = lista1 + lista2
-    r = class_palabra(lista)
-    if r == 1:
-        return 'Cotizacion'
-    else:
-        return 'Otra Cosa'
-
-    
+ 
 def consulta_ruc(ruc):
    headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
    URL= base_url+"/clientes/consulta-por-ruc/"+str(ruc)
@@ -478,37 +418,6 @@ def send_email(text, toaddr):
         
     return ret
 
-def hasNumbers(string):
-    return bool(re.search(r'\d', string))
-
-def hasBC(string):
-    i = string.find('/')
-    return bool(i != -1)
-
-def other_check(token):    
-    b1 = not hasNumbers(token)
-    b2 = not hasBC(token)
-    return (b1 and b2)
-
-
-def token_and_clean(texto):
-    palabras_funcionales = nltk.corpus.stopwords.words("spanish")    
-    tokens = nltk.word_tokenize(texto, "spanish")
-    tokens_limpios=[]
-    for token in tokens:        
-        if token not in palabras_funcionales:
-            if len(token) > 2 and token not in tokens_limpios:  #>2 helps in filtering out common
-                if other_check(token):
-                    tokens_limpios.append(token)
-    return tokens_limpios
-
-def stem_lemma(word):
-    stemmer = SnowballStemmer('spanish')
-    word = parsetree(word, lemmata=True)[0].lemmata[0]
-    word = stemmer.stem(word) 
-    return word
-
-
 
 def get_score(q, u, td):
     dt = td[u][1]
@@ -539,25 +448,28 @@ def suggest_url(question, topic):
         elif topic == "Renuncia/Despido/Desahucio":
             ulist = u_RDD 
         elif topic == "IESS":
-            ulist = u_IESS
-        else:
-            ulist = u_CONS 
+            ulist = u_IESS            
+        elif topic == "Consultoria":
+            ulist = u_CONS
+        else: #otros servicios
+            ulist = u_OS
         
         for u in ulist:
             score = get_score(question, u, texts_data)
             ranking.append(score)
             
-        if np.max(ranking) > 0:
-            url_res = ulist[np.argmax(ranking)]
+        if topic == "Consultoria":
+            if np.max(ranking) >= 4:  #tunned parameter
+                url_res = ulist[np.argmax(ranking)]            
+                return url_res   
+            else:
+                return None
+        elif np.max(ranking) > 0:
+            url_res = ulist[np.argmax(ranking)]            
             return url_res
         else:
             return None           
         
-    except:
+    except Exception as e:
+        print('Exception en suggest_url: {0}'.format(e))
         return None      
-    
-
-
-
-
-

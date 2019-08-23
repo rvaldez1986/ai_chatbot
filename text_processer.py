@@ -13,7 +13,7 @@ import textos as txts
 
 def proc_message(message, context): 
     
-    ST = ["Jubilacion Patronal", "Renuncia/Despido/Desahucio", "IESS", "Consultoria"]
+    ST = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 'Otros servicios']
     
     if context[0] == 0: #ESTADO 0        
         textos = txts.dict_textos0()
@@ -48,10 +48,13 @@ def proc_message(message, context):
                 ret_message = textos["Greeting"]
                 context = [0, None, None, None, None, 0, None, None]
                 
-            elif pred_topic == "Otros servicios (Charlas/Capacitaciones/Financiera)":
-                ret_message = textos["Otros servicios (Charlas/Capacitaciones/Financiera)"]
+            elif pred_topic == 'Charlas/Capacitaciones':
+                ret_message = textos['Charlas/Capacitaciones']
                 context = [0, None, None, None, None, 0, None, None]
                 
+            elif pred_topic == 'Facturacion/Retencion/Cobros':
+                ret_message = textos['Facturacion/Retencion/Cobros']
+                context = [0, None, None, None, None, 0, None, None]                 
             else:
                 ret_message = textos['NT']           #No topic, could be wikipedia
                 context = [1, 'NT', None, OM, None, context[5]+1, None, None]              

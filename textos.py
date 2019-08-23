@@ -16,9 +16,12 @@ def dict_textos0():
     repJS  = ('Gracias por su interes, puede enviar su cv y una carta motivacional al correo infouio@actuaria.com.ec')   
     repCN  = ('ACTUARIA tiene oficinas en Quito y Guayaquil. El telefono de Quito es (02) 2-501-001 y el telefono '
               'de Guayaquil es (04) 295-9204. La direccion de Quito es Orellana y 6 de Diciembre y en Guayaquil estamos ubicados en '
-              'Emilio Romero y Benjamin Carrion.')
-    repGR  = ('Hola!')
-    repCHAR = ('Por favor comuniquese al (02) 2-501-001 EXT-601  para ayudarle inmediatamente con toda la información necesaria')
+              'Emilio Romero y Benjamin Carrion.\n Para contactos por correo por favor escribir a roberto.valdez@actuaria.com.ec')
+    repGR  = ('Hola! Por favor realize cualquier consulta para responderle')
+    repCHAR = ('Para el tema de charlas por favor comuniquese al (02) 2-501-001 EXT-601 para ayudarle inmediatamente con toda la información necesaria \n '
+               'Para contactos por correo por favor escribir a charlas@actuaria.com.ec')
+    repFAC = ('Para el tema de Facturacion/Retencion/Cobros por favor comuniquese al (02) 2-501-001 EXT-601 para ayudarle inmediatamente con toda la información necesaria \n '
+               'Para contactos por correo por favor escribir a facturacion@actuaria.com.ec')
     repNT  = ('Hmm.. Este tema es relativo a ACTUARIA? O es de otro tema?')
     repCE  = ('Gracias por contactarnos, si desea deje su correo y/o numero de telefono y nos contactaremos con usted.')    
     
@@ -29,7 +32,8 @@ def dict_textos0():
     textos["job seeker"] = repJS
     textos["Contacto"] = repCN
     textos["Greeting"] = repGR
-    textos["Otros servicios (Charlas/Capacitaciones/Financiera)"] = repCHAR
+    textos['Charlas/Capacitaciones'] = repCHAR
+    textos['Facturacion/Retencion/Cobros'] = repFAC
     textos['NT'] = repNT
     textos['CE'] = repCE 
     
