@@ -170,37 +170,104 @@ def pred_prob(text):
         
                 return (prob, pol, text)  
             else:
-                return(None, None, None)
+                return(np.zeros(13), pol, text)
         
         else:
-            return (None, None, None)
+            return (np.zeros(13), pol, None)
     
     except Exception as e:
         print('Exception en predTop_prob: {0}'.format(e))
-        return (None, None, None)
+        return (np.zeros(13), None, None)
     
     
 def predict_topic(sentence):
     topics = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 
-                 'Greeting', 'Contacto', 'No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
+                 'Greeting', 'Contacto', 'U: No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
                       'Hi Five', 'job seeker', 'Facturacion/Retencion/Cobros']
     
     sentence = prepare_text(sentence)
     
-    try:
-    
+    try:    
         if sentence:
             prob, pol, text = pred_prob(sentence)
             if prob.all():
-                return (topics[np.argmax(prob)], pol, text)
+                if np.max(prob) > 0.25:
+                    return (topics[np.argmax(prob)], pol, text)
+                else:
+                    return('U: No Topic', 0, text) 
             else:
-                return('No Topic', 0, None) 
+                return('U: No Topic', 0, text) 
         else:
-            return('No Topic', 0, None) 
+            return('U: No Topic', 0, None) 
             
     except Exception as e:
         print('Exception en predict_topic: {0}'.format(e))
-        return('No Topic', 0, None)  
+        return('U: No Topic', 0, None)  
+        
+        
+def assign_response0p5(ST, pred_topic, pol, OM, context, textos):
+    
+    if pred_topic in ST:
+        ret_message = textos["ST"].format(pred_topic)
+        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]      #Migra a estado 1
+    
+    elif pred_topic == "Queja":                                              
+        ret_message = textos["Queja"]
+        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]                
+        
+    elif pred_topic == "Hi Five":
+        ret_message = textos["Hi Five"]
+        context = [0, None, None, None, None, 0, None, None] 
+
+    elif pred_topic == "job seeker":
+        ret_message = textos["job seeker"]
+        context = [0, None, None, None, None, 0, None, None]
+        
+    elif pred_topic == "Contacto":
+        ret_message = textos["Contacto"]
+        context = [0, None, None, None, None, 0, None, None]
+        
+    elif pred_topic == "Greeting":
+        ret_message = textos["Greeting"]
+        context = [0, None, None, None, None, 0, None, None]
+        
+    elif pred_topic == 'Charlas/Capacitaciones':
+        ret_message = textos['Charlas/Capacitaciones']
+        context = [0, None, None, None, None, 0, None, None]
+        
+    elif pred_topic == 'Facturacion/Retencion/Cobros':
+        ret_message = textos['Facturacion/Retencion/Cobros']
+        context = [0, None, None, None, None, 0, None, None]                 
+    else:
+        ret_message = textos['NT']           #No topic, could be wikipedia
+        context = [1, 'NT', None, OM, None, context[5]+1, None, None]  
+        
+    return (ret_message, context)
+    
+    
+def proc_messagep50(message, T0, T1):
+    try:
+        message = message.lower()
+        
+        p1 = message.find(T0)
+        p2 = message.find(T1)
+        p3 = message.find('ninguno')
+        
+        if p1 != -1:
+            ans = T0
+        elif p2 != -1:
+            ans = T1
+        elif p3 != -1:
+            ans = 'NT'
+        else:     
+            ans = T0
+    except Exception as e:
+        print('Exception en proc_messagep50: {0}'.format(e))
+        ans = T0
+        
+    return ans   
+    
+  
 
 
 def proc_wiki(message):
@@ -209,7 +276,8 @@ def proc_wiki(message):
         ans = wikipedia.summary(message, sentences=0, chars=500, auto_suggest=True, redirect=True)
         ans = str(ans)
         ans = 'Lo que sé de este tema es: ' + ans
-    except:
+    except Exception as e:
+        print('Exception en proc_wiki: {0}'.format(e))
         ans = 'No se mucho de este tema'
     
     return ans    
@@ -217,10 +285,8 @@ def proc_wiki(message):
     
 def proc_message1ST(message):
     try:
-        message = message.lower()
-        
-        p1 = message.find('persona')
-        p2 = message.find('empresa')
+        message = message.lower()        
+        p1 = message.find('persona'); p2 = message.find('empresa')
         
         if p1 != -1 and p2 == -1:
             ans = 'persona'
@@ -373,6 +439,8 @@ def consulta_ruc(ruc):
 
 
 def consulta_proc(num_proc):
+   my_dict={"R":"Ingresado en Sistema","A":"Asignado a un tecnico","N":"En Desarrollo","D":"Esperando infromacion","L":"Finalizado por tecnico",
+         "V":"Revisado","E":"Despachado","T":"Entregado al cliente","U":"Anulado","O":"Pagado y Entregado"} 
    headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
    URL= base_url+"/vendedores/datos/"+str(num_proc)
    URL2= base_url+"/procesos/estado-proceso/"+str(num_proc)
@@ -392,12 +460,12 @@ def consulta_proc(num_proc):
         payload3 = r3.json()
         codigo_cliente_proc = payload3["respuesta"]["codigoCliente"] 
         
-        return (nombre_encargado,Extension_encargado,correo_electronico,estado_proceso,codigo_cliente_proc)        
+        return (nombre_encargado,Extension_encargado,correo_electronico,my_dict[estado_proceso.get(num_proc)],codigo_cliente_proc)        
 
    except Exception:
         return ('None')
-    
-    
+
+   
 def send_email(text, toaddr):
     try:
         fromaddr = "roberto.valdez@actuaria.com.ec"        
@@ -413,7 +481,8 @@ def send_email(text, toaddr):
         
         ret = 'success'
         
-    except:
+    except Exception as e:
+        print('Exception en send_email: {0}'.format(e))
         ret = 'error'
         
     return ret
@@ -473,3 +542,4 @@ def suggest_url(question, topic):
     except Exception as e:
         print('Exception en suggest_url: {0}'.format(e))
         return None      
+

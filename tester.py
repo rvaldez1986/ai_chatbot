@@ -6,7 +6,7 @@ Created on Sat Jun 15 14:20:15 2019
 """
 #context = [Estado: 0, Topic: NA, Polarity: NA, OM: NA, Intent: NA, Counter: 0, RUC:NA, Numproc:NA]  
 import os
-os.chdir('C:\\Users\\rober\\desktop\\ai_chatbot')
+os.chdir('C:\\Users\\sebastian.tamayo\\Desktop\\chatbot_server')
     
 from text_processer import proc_message
 from collections import defaultdict
@@ -40,7 +40,8 @@ users_dict = defaultdict(lambda: [0, None, None, None, None, 0,None,None])
 #message = "empresa"
 
 message= "55666"
-context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001",None]
+context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001","55666"]
+client_id="123"
 #context = [1,"Jubilacion Patronal",0.0, 'quisiera informacion del calculo de jubilacion patronal',None,None,None,None]
 
 #message= "123456789123"
@@ -50,11 +51,11 @@ context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion 
 
 
 
-out_message, context = proc_message(message, context)
+out_message, context = proc_message(message, context,client_id)
 out_message
 context
 
-out_message, context = proc_message(message, context)
+out_message, context = proc_message(message, context,client_id)
 out_message
 
 

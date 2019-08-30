@@ -24,7 +24,21 @@ class ChatraClient():
         self.agent_id = "bF9w7viEcHXbBFupx"    #we only have one agent (daniela)
         self.headers = headers
         self.users_dict = defaultdict(lambda: [0, None, None, None, None, 0]) 
-        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55", "15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1"]        
+        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55", 
+                           "15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1",
+                           "ps15yauq6dve2t7rmb7jcfli22h7w25xgonkz13",
+                           "ao15glwpdk57ucq4y38t2mszhb6e2fj4in1rxv2",
+                           "xfh1s5btl6yopa7zm0ui1qejn2gw139r3c7kvd7",
+                           "kl1btfu55p2h14i8xr26vcgnadq8yom29wsjze5",
+                           "go1m55rc5vj4pf31yszqw40tkhixula5den22b0",
+                           "ai1npe5uj5mdfrbchwz0k8gyvq54o62s67x0tl1",
+                           "im1vcr5378l01g6zf0uopthqxajw7debkys45n3",
+                           "buo15d3eq9jv3cnp55kxz9al58yw9irt5mfshg8",
+                           "j1g5x6lfkc5qvtsnu89mw1o257bp9erzdi7yha6",
+                           "cfo1hz5peln5jtb7r8a4igwv3k8y75qd8xmsu46",
+                           "mejibp1thz5awsn5dyc4x3r2k1fgqu13o5l1v12",
+                           "ehu15nioz6mb2qlj0wgs9dkpy8vtxr09072cfa4",
+                           "ou1vlin5ysph6ebfg7tz0m1a71k4jd19qxrw4c9"]        
    
 
     @classmethod
@@ -50,7 +64,7 @@ class ChatraClient():
         
         if eventName == 'chatStarted' or eventName == 'chatFragment':        
             context = self.users_dict[client_id]   #context for chat
-            out_message, context = proc_message(message, context)
+            out_message, context = proc_message(message, context, client_id)
             if client_id in self.test_users:   #only respond to test users (testing phase)
                 self.send_message(client_id, out_message, self.agent_id) 
             self.users_dict[client_id] = context

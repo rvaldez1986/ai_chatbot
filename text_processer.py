@@ -11,60 +11,70 @@ import textos as txts
     
 #context = [Estado: 0, Topic: NA, Polarity: NA, OM: NA, Intent: NA, Counter: 0, RUC:NA, Numproc:NA]   
 
-def proc_message(message, context): 
+def proc_message(message, context, client_id): 
     
     ST = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 'Otros servicios']
     
     if context[0] == 0: #ESTADO 0        
-        textos = txts.dict_textos0()
-        ret_message = ''
+        textos = txts.dict_textos0()        
         
         try:    
             pred_topic, pol, OM = nlp.predict_topic(message)
             
-            #ASSIGN REPLY  (in terms of predicted topic)           
             
-            if pred_topic in ST:
-                ret_message = textos["ST"].format(pred_topic)
-                context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]      #Migra a estado 1
+            #ASSIGN REPLY  (in terms of predicted topic)    
             
-            elif pred_topic == "Queja":                                              
-                ret_message = textos["Queja"]
-                context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]                
+            if pred_topic[:2] == 'U:': #unsure
                 
-            elif pred_topic == "Hi Five":
-                ret_message = textos["Hi Five"]
-                context = [0, None, None, None, None, 0, None, None] 
-
-            elif pred_topic == "job seeker":
-                ret_message = textos["job seeker"]
-                context = [0, None, None, None, None, 0, None, None]
-                
-            elif pred_topic == "Contacto":
-                ret_message = textos["Contacto"]
-                context = [0, None, None, None, None, 0, None, None]
-                
-            elif pred_topic == "Greeting":
-                ret_message = textos["Greeting"]
-                context = [0, None, None, None, None, 0, None, None]
-                
-            elif pred_topic == 'Charlas/Capacitaciones':
-                ret_message = textos['Charlas/Capacitaciones']
-                context = [0, None, None, None, None, 0, None, None]
-                
-            elif pred_topic == 'Facturacion/Retencion/Cobros':
-                ret_message = textos['Facturacion/Retencion/Cobros']
-                context = [0, None, None, None, None, 0, None, None]                 
-            else:
-                ret_message = textos['NT']           #No topic, could be wikipedia
-                context = [1, 'NT', None, OM, None, context[5]+1, None, None]              
+                if pred_topic[:6] == 'U: 2T:': #unsure 2 topics 'U: 2T: T0, T1'
+                    b = pred_topic[7:].index(','); T0 = pred_topic[7:7+b]; T1 = pred_topic[7+b+2:]
+                    ret_message = textos["U2T"].format(T0, T1)
+                    context = [0.5, pred_topic, pol, OM, None, context[5]+1, None, None]      #Migra a estado 0.5
+                    
+                elif pred_topic[:6] == 'U: OH:': #unsure only hi five
+                    pass  #not implemented yet
+                    
+                elif pred_topic[:6] == 'U: OG:': #unsure only greeting
+                    pass   #not implemented yet
+                    
+                else:  #unsure no topic 'U: No Topic'
+                    ret_message = textos["UNT"]
+                    context = [0.5, pred_topic, pol, OM, None, context[5]+1, None, None]      #Migra a estado 0.5                 
+                    
+            else: #topic found             
+                ret_message, context = nlp.assign_response0p5(ST, pred_topic, pol, OM, context, textos)              
         
         except Exception as e:   
             ret_message = textos['CE']
             context = [0, None, None, None, None, 0, None, None]
-            print(e)
+            print('Exception en proc_message: {0}'.format(e))
           
-
+    
+    elif context[0] == 0.5: #ESTADO 0.5 unsure
+        textos = txts.dict_textos0()  #we use the same as in previous section
+        pred_topic = context[1]; pol = context[2]; OM = context[3]
+        
+        if pred_topic[:6] == 'U: 2T:': #unsure 2 topics 'U: 2T: T0, T1'
+            b = pred_topic[7:].index(','); T0 = pred_topic[7:7+b]; T1 = pred_topic[7+b+2:]
+            res = nlp.proc_messagep50(message, T0, T1)  #this will sort out topic
+            ret_message, context = nlp.assign_response0p5(ST, res, pol, OM, context, textos)       
+                    
+        elif pred_topic[:6] == 'U: OH:': #unsure only hi five
+            pass
+                    
+        elif pred_topic[:6] == 'U: OG:': #unsure only greeting
+            pass
+                    
+        else:  #unsure no topic 'U: NT'
+            
+            pred_topic2, pol2, OM2 = nlp.predict_topic(message)
+                
+            if pred_topic2 != 'U: No Topic':
+                ret_message, context = nlp.assign_response0p5(ST, pred_topic2, pol2, OM2, context, textos)                
+            else:
+                ret_message, context = nlp.assign_response0p5(ST, 'No Topic', pol2, OM2, context, textos)  #moves to no topic
+                    
+            
         
         
     elif context[0] == 1: #ESTADO 1
@@ -89,9 +99,13 @@ def proc_message(message, context):
                 context = [2, context[1], context[2], context[3], None, context[5]+1, None, None]
 
             else:
-
-                ret_message = textos["ST"][3].format(context[1])           #list in dictionary (ST has 3 messages)
-                context = [1, context[1], context[2], context[3], None, context[5]+1, None, None]
+                if context[5] < 2:
+                    ret_message = textos["ST"][3].format(context[1])           #list in dictionary (ST has 3 messages)
+                    context = [1, context[1], context[2], context[3], None, context[5]+1, None, None]
+                else:
+                    ret_message = textos["ST"][4]       
+                    context = [0, None, None, None, None, 0, None, None]
+                    
 
         elif context[1] == "Queja":
             res = nlp.proc_messageYN(message)            
@@ -102,21 +116,34 @@ def proc_message(message, context):
                 ret_message = textos["Queja"][1]             
                 context = [0, None, None, None, None, 0, None, None] 
             else:
-                ret_message = textos["Queja"][2]            
-                context = [1, context[1], context[2], context[3], None, context[5]+1, None, None]
+                if context[5] < 2:
+                    ret_message = textos["Queja"][2]            
+                    context = [1, context[1], context[2], context[3], None, context[5]+1, None, None]
+                else:
+                    ret_message = textos["ST"][4]       
+                    context = [0, None, None, None, None, 0, None, None]
             
         elif context[1] == "NT":
             res = nlp.proc_message1NT(message)
+            
             if res == "actuaria":
-                ret_message = textos["NT"][0]           
+                ret_message = textos["NT"][0]              
+                message2 = textos["NT"][1].format(client_id, context[3]).encode("utf-8")             
+                toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                ret = nlp.send_email(message2, toaddr)           
                 context = [0, None, None, None, None, 0, None, None] 
-            elif res == "otro":                
-                ret_message = nlp.proc_wiki(context[3])          
-                context = [0, None, None, None, None, 0, None, None] 
-            else:
-                ret_message = textos["NT"][1]            
-                context = [1, context[1], context[2], context[3], None, context[5]+1,None,None]
                 
+            elif res == "otro":               
+                ret_message = nlp.proc_wiki(context[3])                    
+                context = [0, None, None, None, None, 0, None, None] 
+                
+            else:
+                if context[5] < 2:
+                    ret_message = textos["NT"][2]            
+                    context = [1, context[1], context[2], context[3], None, context[5]+1,None,None]
+                else:
+                    ret_message = textos["ST"][4]       
+                    context = [0, None, None, None, None, 0, None, None]
         
     
     
@@ -143,18 +170,24 @@ def proc_message(message, context):
                 except Exception:  #Error
                     ret_message = textos["ST"][2]            
                     context = [0, None, None, None, None, 0, res, None]
-            else:
-                ret_message = textos["ST"][3]   #puede repetir, ingrese su ruc           
-                context = [2, context[1], context[2], context[3], None, context[5]+1, None, None]
+            else:                
+                if context[5] < 3:
+                    ret_message = textos["ST"][3]   #puede repetir, ingrese su ruc           
+                    context = [2, context[1], context[2], context[3], None, context[5]+1, None, None]
+                else:
+                    ret_message = textos["ST"][4]            
+                    context = [0, None, None, None, None, 0, None, None]
+                
+                
+                
+                
         else:
             message2 = textos["MSG"][0].format(message, context[3]).encode('utf-8')        
             toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
             ret = nlp.send_email(message2, toaddr)
                     
-            if ret == 'success':        
-                ret_message = textos["MSG"][1]
-            else:
-                ret_message = textos["MSG"][2]
+            ret_message = textos["MSG"][1]
+            
             context = [0, None, None, None, None, 0, None, None]   
             
 
@@ -182,6 +215,10 @@ def proc_message(message, context):
         
         elif res == "no":
             ret_message = textos["KO"][2]             
+            message2 = textos["KO"][3].format(client_id, context[3]).encode("utf-8")             
+            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+            ret = nlp.send_email(message2, toaddr)            
+            
             context = [0, None, None, None, None, 0, None, None]
             
         else:  #answer (yes/no) not understood
@@ -200,7 +237,7 @@ def proc_message(message, context):
             message2 = textos["MSG"][0].format(message).encode('utf-8')        
         
             toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
-            ret = nlp.send_email(message2, toaddr)
+            ret = nlp.send_email(message2, toaddr)  
         
             if ret == 'success':        
                 ret_message = textos["MSG"][1]
