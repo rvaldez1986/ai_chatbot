@@ -6,7 +6,7 @@ Created on Sat Jun 15 14:20:15 2019
 """
 #context = [Estado: 0, Topic: NA, Polarity: NA, OM: NA, Intent: NA, Counter: 0, RUC:NA, Numproc:NA]  
 import os
-os.chdir('C:\\Users\\sebastian.tamayo\\Desktop\\chatbot_server')
+os.chdir('C:\\Users\\rober\\Desktop\\chatbot\\chatbot_server')
     
 from text_processer import proc_message
 from collections import defaultdict
@@ -15,6 +15,17 @@ from textblob import TextBlob
 
 users_dict = defaultdict(lambda: [0, None, None, None, None, 0,None,None])
 
+
+import nlp_functions as nlp
+
+
+nlp.azure_q1('salir')
+nlp.proc_message1ST('estoy escribiendo a nombre de la empresa ..')
+
+
+nlp.pred_prob('quien es lionel messi?')
+
+nlp.proc_wiki('quien es lionel messi?')
 
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
 #message = "quisiera informacion de mi proceso de jubilacion patronal"

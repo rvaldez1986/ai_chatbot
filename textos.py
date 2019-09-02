@@ -18,7 +18,7 @@ def dict_textos0():
               'de Guayaquil es (04) 295-9204. La direccion de Quito es Orellana y 6 de Diciembre y en Guayaquil estamos ubicados en '
               'Emilio Romero y Benjamin Carrion.\n Para contactos por correo por favor escribir a roberto.valdez@actuaria.com.ec. '
               'Por último puede dejarnos un mensaje por el siguiente link: https://www.actuaria.com.ec/contacto/')
-    repGR  = ('Es un placer poder ayudarle. Por favor escriba el motivo de su consulta')
+    repGR  = ('Es un placer poder ayudarle. Por favor escriba el motivo de su consulta.')
     repCHAR = ('Para el tema de charlas y capacitaciones puede reviar la información en el siguiente link: '
                'https://actuaria.com.ec/servicio/capacitaciones/ o para cualquier consulta por favor '
                'comuniquese al (02) 2-501-001 EXT-601 para ayudarle inmediatamente con toda la información necesaria \n '
@@ -26,10 +26,27 @@ def dict_textos0():
     repFAC = ('Para el tema de Facturacion/Retencion/Cobros por favor comuniquese al (02) 2-501-001 EXT-601 para ayudarle inmediatamente con toda la información necesaria \n '
                'Para contactos por correo por favor escribir a facturacion@actuaria.com.ec')
     repNT  = ('Por favor especifique si su consulta es sobre un tema de ACTUARIA CONSULTORES o es sobre otro tema?')
-    repCE  = ('Gracias por contactarnos, si desea deje su correo y/o numero de telefono y nos contactaremos con usted.')   
-    repU2T  = ('Su consulta trata sobre el tema: {0}, {1} o ninguno de los dos?')  
-    repUNT  = ('No me queda muy claro el tema. Puede ser mas específico en su consulta?')  
+    repCE  = ('En breves minutos, su requerimiento será enviado a un representante de ACTUARIA. Por favor espere en este chat para ser contestado. '
+              'Si es un requerimiento urgente, por favor contactarse al (02) 2-501-001')  
     
+    repU1T = ('No estoy muy claro con su consulta. Se refiere al tema {0}?')
+    repU2T  = ('Su consulta trata sobre el tema: {0}, {1} o ninguno de los dos?')  
+    repUNT  = ('No me queda muy claro el tema de su mensaje. Por favor intente reformular su consulta incluyendo el mayor número de detalles posible. '
+               'Por ejemplo para el tema {0} puede incluir palabaras como {1}.')  
+    
+    
+    palabras_topic = {'Jubilacion Patronal': 'jubilación, patronal, estudio actuarial, etc.', 
+                      'Consultoria': 'nota técnica, reserva ibnr, recursos humanos, etc.', 
+                       'Renuncia/Despido/Desahucio': 'renuncia, despido, desahucio, desvinculación, etc.', 
+                       'IESS': 'IESS, jubilación por vejez, invalidez o muerte, etc.', 
+                       'Greeting': 'hola, buenos días, etc.', 
+                       'Contacto': 'dirección, teléfono, correo, etc.', 
+                       'Queja': 'queja, reclamo, etc.', 
+                       'Otros servicios': 'consultoría financiera, precios de transferencia, avaluos, etc.', 
+                       'Charlas/Capacitaciones': 'charla, capacitación, etc.', 
+                       'Hi Five': 'buen servicio, muchas gracias, etc.', 
+                       'job seeker': 'hoja de vida, cv, currículum, etc.', 
+                       'Facturacion/Retencion/Cobros': 'factura, retención, etc.'}   
 
     
     #FILL DICT  
@@ -43,8 +60,10 @@ def dict_textos0():
     textos['Facturacion/Retencion/Cobros'] = repFAC
     textos['NT'] = repNT
     textos['CE'] = repCE 
+    textos["U1T"] = repU1T
     textos["U2T"] = repU2T
     textos["UNT"] = repUNT
+    textos["palabras"] = palabras_topic
     
     return textos
 
@@ -58,19 +77,23 @@ def dict_textos1():
     repST1   = ('Actuaria esta dirigida principalmente a servicio de empresas, sin embargo para el tema {0} si desea '
                 'realizar simulaciones y calculos por favor dirijase a el siguiente link: https://actuaria.com.ec/simuladores/')    
     repST2   = ('Por favor puede ingresar el RUC de su empresa?')
-    repST3   = ('No entendi. Su consulta sobre el tema {0} es para una persona natural o de una empresa?')    
+    repST3   = ('No se pudo validar su respuesta. Su consulta sobre el tema {0} es para una persona natural o de una empresa? '
+                '\n \nSi desea realizar otra consulta digite \'salir\' para volver al inicio.')    
     repST4   = ('No se pudo validar su respuesta. Muchas gracias por contactarnos.')
     repQ0    = ('Por favor en un mismo mensaje detalle lo sucedido, seguido de su correo electronico y número telefónico para contactarnos a la brevedad posible.')  
     repQ1    = ('Gracias por sus comentarios, lo tendremos en cuenta para nuestro proceso de mejora continua.')  
-    repQ2    = ('No entendi su respuesta, desea formalizar su queja?') 
+    repQ2    = ('No se pudo validar su respuesta, desea formalizar su queja? \n \nSi desea realizar otra consulta digite \'salir\' para volver al inicio.') 
     repNT0   = ('En breves minutos, su requerimiento será enviado a un representante de ACTUARIA. Por favor espere en este chat para ser contestado. Si es un requerimiento urgente, por favor contactarse al (02) 2-501-001') 
     repNT1  = ('\nEl cliente con id: {0} ha enviado al chatbot un mensaje que no pudo ser resuelto. El mensaje original fué: \n{1}')
-    repNT2   = ('No entendi su respuesta, el tema es relativo a ACTUARIA o a otro tema?')
+    repNT2   = ('No se pudo validar su respuesta, el tema de su consulta es relativo a ACTUARIA CONSULTORES o a otro tema? \n \n'
+                'Si desea realizar otra consulta digite \'salir\' para volver al inicio')
+    repSalir = ('Por favor escriba el motivo de su nueva consulta.')
     
     #FILL DICT  
     textos["ST"] = [repST0, repST1, repST2, repST3 , repST4] 
     textos["Queja"] = [repQ0, repQ1, repQ2] 
-    textos['NT'] = [repNT0, repNT1, repNT2]    
+    textos['NT'] = [repNT0, repNT1, repNT2]  
+    textos['salir'] =  repSalir
     
     return textos
 
@@ -82,18 +105,21 @@ def dict_textos2():
     repST1  = ('Requiere informacion sobre un proceso que actualmente esta realizando con ACTUARIA?')
     repST2  = ('Lo lamento, no entendi su requerimiento. Pero sigo aprendiendo. Por favor podria explicarme a mayor detalle su requerimiento?'
                'Caso contrario si se comunica con nosotros al (02) 2-501-001 con mucho gusto le ayudaremos.')
-    repST3  = ('El RUC ingresado no es valido, puede ingresar nuevamente el RUC de su empresa?')
+    repST3  = ('El RUC ingresado no es valido, puede ingresar nuevamente el RUC de su empresa? \n \nSi desea realizar otra consulta '
+               'digite \'salir\' para volver al inicio.')
     repST4  = ('No se pudo validar su RUC. Muchas gracias por contactarnos.')
     repMSG  = ("\nEl chatbot recibio una queja formal de servicio con los siguientes datos y detalles:\n {0}" 
                " \n El mensaje original de queja fue:\n {1}"
                "\n Por Favor contactar de manera inmediata al cliente.\n") 
     repMSG1  = ('Muchas gracias por su tiempo. Hemos notificado al departamento de satisfaccion al cliente. '
-              'Un asesor se comunicará con usted en breve.')    
+              'Un asesor se comunicará con usted en breve.')   
+    repSalir = ('Por favor escriba el motivo de su nueva consulta.')
     
     
     #FILL DICT
     textos["ST"] = [repST0, repST1, repST2, repST3, repST4]     
     textos["MSG"] = [repMSG, repMSG1]  
+    textos['salir'] =  repSalir
     
     
     return textos
@@ -103,18 +129,22 @@ def dict_textos3():
     
     #REPLYS
     repST0  = ('Perfecto, nos puede dejar un nombre y un correo para contactarnos y enviar la propuesta de {0}?')
-    repST1  = ('¿Requiere el envío de una cotización?')
-    repST2  = ('¿Requiere información sobre un proceso que actualmente está realizando con ACTUARIA?')
+    repST1  = ('No se pudo validar su respuesta. ¿Requiere el envío de una cotización? \n \n'
+               'Si desea realizar otra consulta digite \'salir\' para volver al inicio.')
+    repST2  = ('No se pudo validar su respuesta. ¿Requiere información sobre un proceso que actualmente está realizando con ACTUARIA? \n \n'
+               'Si desea realizar otra consulta digite \'salir\' para volver al inicio.')
     repKO  = ('{0} Por favor ingrese el número del proceso remitido por ACTUARIA. Si no cuenta con numero de proceso comuniquese al (02) 2-501-001 para ayudarle inmediatamente')
     repKO1  = ('No se ha podido encontrar el RUC en el sistema. Por favor contáctenos al (02) 2-501-001 para ayudarle inmediatamente.')
     repKO2  = ('Lo lamento, no puedo entender su requerimiento pero sigo aprendiendo. Este chat esta siendo enviado a un representante '
                'de ACTUARIA para el analisis necesario. Por favor espere en este chat para ser contestado. Si es un requerimiento urgente '
-               'Por favor contactarse al (02) 2-501-001 para ayudarle inmediatamente')
-    repKO3  = ('\nEl cliente con id: {0} ha enviado al chatbot un mensaje que no pudo ser resuelto. El mensaje original fué: \n{1}')    
+               'Por favor contactarse al (02) 2-501-001 para ayudarle inmediatamente.')
+    repKO3  = ('\nEl cliente con id: {0} ha enviado al chatbot un mensaje que no pudo ser resuelto. El mensaje original fué: \n{1}')  
+    repSalir = ('Por favor escriba el motivo de su nueva consulta.')
     
     #FILL DICT
     textos["ST"] = [repST0, repST1, repST2]      
     textos["KO"] = [repKO, repKO1, repKO2, repKO3]  
+    textos['salir'] =  repSalir
     
     return textos
 
@@ -125,19 +155,19 @@ def dict_textos4():
     #REPLYS
     repMSG = ("\nSe envió al chatbot el requerimiento de una cotizacion con los siguientes datos: \n {0}")
     repMSG1  = ('Muchas gracias, se ha enviado un correo a nuestro departamento de comercial con sus datos y '
-              'nos contactaremos con usted en la brevedad posible')    
+              'nos contactaremos con usted en la brevedad posible.')    
     repMSG2  = ('Su requerimiento ha sido enviado al Departamento Comercial y muy pronto un ejecutivo se contactará con usted.')    
     repKO  = ('{0} Su proceso se encuentra ( {1} ), el encargado de su estudio es {2}, Los datos de contacto son email: {3}. Telefono (02)-2501001 extension {4}.'
-              '  Ademas hemos notificado al encargado de su cuenta a que se comunique con usted a la brevedad posible')
+              '  Ademas hemos notificado al encargado de su cuenta a que se comunique con usted a la brevedad posible.')
     repKO1  = ('Su numero de proceso no es correcto. Por favor comuniquese al (02) 2-501-001')    
-    repKO2  = ('Numero de Proceso incorrecto, por favor ingrese nuevamente su proceso:')
+    repKO2  = ('Numero de Proceso incorrecto, por favor ingrese nuevamente su proceso. \n \nSi desea realizar otra consulta digite \'salir\' para volver al inicio')
     repKO3  = ("\nEl chatbot recibio una consulta de un proceso datos y detalles:\n Proceso: {0}  Razon Social: {2}  Estado del Proceso: {3}  Codigo del Cliente: {4}" 
                " \n El mensaje original de consulta fue:\n {1}"
                "\n Por Favor contactar de manera inmediata al cliente.\n") 
     repKO4  = ('Hemos notificado al encargado de su cuenta a que se comunique con usted a la brevedad posible')    
     repKO5  = ('El encargado de su proceso tomará contacto con usted a la brevedad posible.')
     repKO6  = ('{0} Su proceso fue ( {1} ), el encargado de su estudio fue {2}, Los datos de contacto son email: {3}. Telefono (02)-2501001 extension {4}.'
-              '  Ademas hemos notificado al encargado actual su cuenta a que se comunique con usted a la brevedad posible')
+              '  Ademas hemos notificado al encargado actual su cuenta a que se comunique con usted a la brevedad posible.')
     
     #FILL DICT
     textos["MSG"] = [repMSG, repMSG1, repMSG2]

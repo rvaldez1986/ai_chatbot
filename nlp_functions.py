@@ -137,6 +137,15 @@ def percent_greet(sentence):
         return count/len(tokens)
     else:
         return 0
+    
+def ex_capac(sentence):
+    tcap = ['charl', 'curs', 'capacit', 'seminari', 'formacion', 'capacitacion']
+    count = 0
+    tokens = token_and_clean(sentence)
+    for w in tokens:       
+        if w in tcap:
+            count += 1  
+    return (count > 0)*1    
 
 
 def pred_prob(text):
@@ -160,6 +169,7 @@ def pred_prob(text):
             if x.any():
                 x = np.append(x, n_token(text))
                 x = np.append(x, percent_greet(text))
+                x = np.append(x, ex_capac(text))
                 x = np.append(x, pol)   
     
                 h0 = np.matmul(x, W0) + b0
@@ -167,10 +177,13 @@ def pred_prob(text):
                 h2 = np.matmul(h1, W1) + b1
                 h3 = np.exp(h2)
                 prob = h3/np.sum(h3)
-        
-                return (prob, pol, text)  
+                
+                return (prob, pol, text)                
+                    
             else:
-                return(np.zeros(13), pol, text)
+                prob = np.zeros(13)
+                prob[6] = 1  #probability of no topic is 100%
+                return(prob, pol, text)
         
         else:
             return (np.zeros(13), pol, None)
@@ -182,27 +195,43 @@ def pred_prob(text):
     
 def predict_topic(sentence):
     topics = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 
-                 'Greeting', 'Contacto', 'U: No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
-                      'Hi Five', 'job seeker', 'Facturacion/Retencion/Cobros']
+                 'Greeting', 'Contacto', 'No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
+                      'Hi Five', 'job seeker', 'Facturacion/Retencion/Cobros']    
     
     sentence = prepare_text(sentence)
     
     try:    
         if sentence:
+            
             prob, pol, text = pred_prob(sentence)
-            if prob.all():
-                if np.max(prob) > 0.25:
-                    return (topics[np.argmax(prob)], pol, text)
-                else:
-                    return('U: No Topic', 0, text) 
+            mprob = np.max(prob); scdprob = np.partition(prob, -2)[-2]
+            t0 = topics[np.where(prob == mprob)[0][0]]; t1 = topics[np.where(prob == scdprob)[0][0]]
+            
+            if mprob > 0.625:
+                return(t0, pol, text)
+                
+            elif mprob > 0.5: #unsure
+                if t0 == 'No Topic' and t1 not in ['No Topic', 'Greeting', 'Hi Five']:
+                    return ('U: NT: {0}'.format(t1), pol, text)
+                
+                elif scdprob > 0.3 and (t0 and t1) not in ['No Topic', 'Greeting', 'Hi Five']:
+                    return('U: 2T: {0}, {1}'.format(t0, t1), pol, text)
+                    
+                elif t0 not in ['Greeting', 'Hi Five']:
+                    return('U: 1T: {0}'.format(t0), pol, text)
+                    
+                else: #other possibilities
+                    return ('U: NT: {0}'.format('Jubilacion Patronal'), pol, text)     
+            
             else:
-                return('U: No Topic', 0, text) 
+                return('U: NT: {0}'.format('Jubilacion Patronal'), 0, text) 
+        
         else:
-            return('U: No Topic', 0, None) 
+            return('U: NT: {0}'.format('Jubilacion Patronal'), 0, None) 
             
     except Exception as e:
         print('Exception en predict_topic: {0}'.format(e))
-        return('U: No Topic', 0, None)  
+        return('U: NT: {0}'.format('Jubilacion Patronal'), 0, None)  
         
         
 def assign_response0p5(ST, pred_topic, pol, OM, context, textos):
@@ -243,9 +272,11 @@ def assign_response0p5(ST, pred_topic, pol, OM, context, textos):
         context = [1, 'NT', None, OM, None, context[5]+1, None, None]  
         
     return (ret_message, context)
+
+
     
     
-def proc_messagep50(message, T0, T1):
+def proc_messagep51(message, T0, T1):
     try:
         message = message.lower()
         
@@ -270,7 +301,7 @@ def proc_messagep50(message, T0, T1):
   
 
 
-def proc_wiki(message):
+def proc_wiki(message):    
     try:
         wikipedia.set_lang('es')
         ans = wikipedia.summary(message, sentences=0, chars=500, auto_suggest=True, redirect=True)
@@ -286,15 +317,19 @@ def proc_wiki(message):
 def proc_message1ST(message):
     try:
         message = message.lower()        
-        p1 = message.find('persona'); p2 = message.find('empresa')
+        p1 = (message.find('persona') != -1) or (message.find('natural') != -1); p2 = (message.find('empresa') != -1)
+        p3 = (message.find('salir') != -1)
         
-        if p1 != -1 and p2 == -1:
+        if p1 and not (p2 or p3):
             ans = 'persona'
-        elif p1 == -1 and p2 != -1:
+        elif p2 and not (p1 or p3):
             ans = 'empresa'
+        elif p3:
+            ans = 'salir'
         else:
             ans = 'na'
-    except:
+    except Exception as e:
+        print('Exception en proc_message1ST: {0}'.format(e))
         ans = 'na'
         
     return ans
@@ -304,16 +339,18 @@ def proc_messageYN(message):
     try:
         message = message.lower()
         
-        p1 = message.find('si')
-        p2 = message.find('no')
+        p1 = (message.find('si') != -1); p2 = (message.find('no') != -1); p3 = (message.find('salir') != -1)
         
-        if p1 != -1 and p2 == -1:
+        if p1 and not (p2 or p3):
             ans = 'si'
-        elif p1 == -1 and p2 != -1:
+        elif p2 and not (p1 or p3):
             ans = 'no'
+        elif p3:
+            ans = 'salir'
         else:
             ans = 'na'
-    except:
+    except Exception as e:
+        print('Exception en proc_messageYN: {0}'.format(e))
         ans = 'na'
         
     return ans
@@ -322,19 +359,19 @@ def proc_messageYN(message):
 def proc_message1NT(message):
     try:
         message = message.lower()
+        p1 = (message.find('actuaria') != -1); p2 = (message.find('otro') != -1); p3 = (message.find('salir') != -1)    
         
-        p1 = message.find('actuaria')
-        p2 = message.find('otro')
-        
-        if p1 != -1 and p2 == -1:
+        if p1 and not (p2 or p3):
             ans = 'actuaria'
-        elif p1 == -1 and p2 != -1:
+        elif p2 and not (p1 or p3):
             ans = 'otro'
+        elif p3:
+            ans = 'salir'
         else:
             ans = 'na'
-    except:
-        ans = 'na'
-        
+    except Exception as e:
+        print('Exception en proc_message1NT: {0}'.format(e))
+        ans = 'na'        
     return ans
 
 
@@ -342,6 +379,7 @@ def proc_message2ST(message):
     try:
         ind = 0
         nlist = [s for s in re.findall(r'\b\d+\b',message)]
+        p3 = (message.find('salir') != -1)  
         ruc=None 
         for n in nlist:
             if val_RUC(n):
@@ -349,9 +387,12 @@ def proc_message2ST(message):
                 ruc=n
         if ind == 1:
             ans = ruc
+        elif p3:
+            ans = 'salir'
         else:
             ans = 'na'
-    except:
+    except Exception as e:
+        print('Exception en proc_message2ST: {0}'.format(e))
         ans = 'na'
     return ans
 

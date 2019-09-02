@@ -38,6 +38,8 @@ class ChatraClient():
                            "cfo1hz5peln5jtb7r8a4igwv3k8y75qd8xmsu46",
                            "mejibp1thz5awsn5dyc4x3r2k1fgqu13o5l1v12",
                            "ehu15nioz6mb2qlj0wgs9dkpy8vtxr09072cfa4",
+                           "hr1x5kzvip4syc7wgt4amfold8u3nj1320e9bq5",
+                           "1i5x2fzhl57e9ak8tpqy05jbcrumwsgv780odn8",        
                            "ou1vlin5ysph6ebfg7tz0m1a71k4jd19qxrw4c9"]        
    
 
