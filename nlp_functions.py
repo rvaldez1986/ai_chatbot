@@ -196,7 +196,7 @@ def pred_prob(text):
 def predict_topic(sentence):
     topics = ['Jubilacion Patronal', 'Consultoria', 'Renuncia/Despido/Desahucio', 'IESS', 
                  'Greeting', 'Contacto', 'No Topic', 'Queja', 'Otros servicios', 'Charlas/Capacitaciones', 
-                      'Hi Five', 'job seeker', 'Facturacion/Retencion/Cobros']    
+                      'Hi Five', 'trabaje con nosotros', 'Facturacion/Retencion/Cobros']    
     
     sentence = prepare_text(sentence)
     
@@ -207,7 +207,7 @@ def predict_topic(sentence):
             mprob = np.max(prob); scdprob = np.partition(prob, -2)[-2]
             t0 = topics[np.where(prob == mprob)[0][0]]; t1 = topics[np.where(prob == scdprob)[0][0]]
             
-            if mprob > 0.625:
+            if mprob > 0.625:  # el modelo esta seguro
                 return(t0, pol, text)
                 
             elif mprob > 0.5: #unsure
@@ -217,11 +217,14 @@ def predict_topic(sentence):
                 elif scdprob > 0.3 and (t0 and t1) not in ['No Topic', 'Greeting', 'Hi Five']:
                     return('U: 2T: {0}, {1}'.format(t0, t1), pol, text)
                     
-                elif t0 not in ['Greeting', 'Hi Five']:
+                elif t0 not in ['No Topic', 'Greeting', 'Hi Five']:
                     return('U: 1T: {0}'.format(t0), pol, text)
                     
                 else: #other possibilities
                     return ('U: NT: {0}'.format('Jubilacion Patronal'), pol, text)     
+            
+            elif t0 not in ['No Topic', 'Greeting', 'Hi Five']:
+                return('U: NT: {0}'.format(t0), pol, text)                 
             
             else:
                 return('U: NT: {0}'.format('Jubilacion Patronal'), 0, text) 
@@ -238,38 +241,38 @@ def assign_response0p5(ST, pred_topic, pol, OM, context, textos):
     
     if pred_topic in ST:
         ret_message = textos["ST"].format(pred_topic)
-        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]      #Migra a estado 1
+        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None, None]      #Migra a estado 1
     
     elif pred_topic == "Queja":                                              
         ret_message = textos["Queja"]
-        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None]                
+        context = [1, pred_topic, pol, OM, None, context[5]+1, None, None, None]                
         
     elif pred_topic == "Hi Five":
         ret_message = textos["Hi Five"]
-        context = [0, None, None, None, None, 0, None, None] 
+        context = [0, None, None, None, None, 0, None, None, None] 
 
-    elif pred_topic == "job seeker":
-        ret_message = textos["job seeker"]
-        context = [0, None, None, None, None, 0, None, None]
+    elif pred_topic == "trabaje con nosotros":
+        ret_message = textos["trabaje con nosotros"]
+        context = [0, None, None, None, None, 0, None, None, None]
         
     elif pred_topic == "Contacto":
         ret_message = textos["Contacto"]
-        context = [0, None, None, None, None, 0, None, None]
+        context = [0, None, None, None, None, 0, None, None, None]
         
     elif pred_topic == "Greeting":
         ret_message = textos["Greeting"]
-        context = [0, None, None, None, None, 0, None, None]
+        context = [0, None, None, None, None, 0, None, None, None]
         
     elif pred_topic == 'Charlas/Capacitaciones':
         ret_message = textos['Charlas/Capacitaciones']
-        context = [0, None, None, None, None, 0, None, None]
+        context = [0, None, None, None, None, 0, None, None, None]
         
     elif pred_topic == 'Facturacion/Retencion/Cobros':
         ret_message = textos['Facturacion/Retencion/Cobros']
-        context = [0, None, None, None, None, 0, None, None]                 
+        context = [0, None, None, None, None, 0, None, None, None]                 
     else:
         ret_message = textos['NT']           #No topic, could be wikipedia
-        context = [1, 'NT', None, OM, None, context[5]+1, None, None]  
+        context = [1, 'NT', None, OM, None, context[5]+1, None, None, None]  
         
     return (ret_message, context)
 
@@ -278,17 +281,28 @@ def assign_response0p5(ST, pred_topic, pol, OM, context, textos):
     
 def proc_messagep51(message, T0, T1):
     try:
-        message = message.lower()
         
-        p1 = message.find(T0)
-        p2 = message.find(T1)
-        p3 = message.find('ninguno')
+        message = unidecode.unidecode(message).lower()
         
-        if p1 != -1:
+        
+        d_topics = {'Jubilacion Patronal': ['jubilacion', 'patronal'], 'Consultoria': ['consultoria'],
+                    'Renuncia/Despido/Desahucio': ['renuncia', 'despido', 'desahucio'], 
+                    'IESS': ['iess'],  'Contacto': ['contacto'], 'Queja': ['queja'],
+                  'Otros servicios': ['otros', 'servicios'], 'Charlas/Capacitaciones': ['charlas', 'capacitaciones'], 
+                  'trabaje con nosotros': ['trabaje', 'trabajo', 'nosotros'], 
+                  'Facturacion/Retencion/Cobros': ['facturacion', 'retencion', 'cobros']}
+        
+        
+        lT0 = d_topics[T0] ; lT1 = d_topics[T1]
+        
+        p0 = np.array([message.find(x) for x in lT0]);  p1 = np.array([message.find(x) for x in lT1])       
+        p2 = message.find('ninguno')
+        
+        if len(p0[p0>=0]) > 0:
             ans = T0
-        elif p2 != -1:
+        elif len(p1[p1>=0]) > 0:
             ans = T1
-        elif p3 != -1:
+        elif p2 != -1:
             ans = 'NT'
         else:     
             ans = T0
@@ -317,7 +331,8 @@ def proc_wiki(message):
 def proc_message1ST(message):
     try:
         message = message.lower()        
-        p1 = (message.find('persona') != -1) or (message.find('natural') != -1); p2 = (message.find('empresa') != -1)
+        p1 = (message.find('persona') != -1) or (message.find('natural') != -1); 
+        p2 = (message.find('empresa') != -1) or (message.find('jurídica') != -1) or (message.find('juridica') != -1);
         p3 = (message.find('salir') != -1)
         
         if p1 and not (p2 or p3):

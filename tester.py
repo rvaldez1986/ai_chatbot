@@ -6,7 +6,7 @@ Created on Sat Jun 15 14:20:15 2019
 """
 #context = [Estado: 0, Topic: NA, Polarity: NA, OM: NA, Intent: NA, Counter: 0, RUC:NA, Numproc:NA]  
 import os
-os.chdir('C:\\Users\\rober\\Desktop\\chatbot\\chatbot_server')
+os.chdir('C:/Users/sebastian.tamayo/Desktop/chatbot_server')
     
 from text_processer import proc_message
 from collections import defaultdict
@@ -19,13 +19,13 @@ users_dict = defaultdict(lambda: [0, None, None, None, None, 0,None,None])
 import nlp_functions as nlp
 
 
-nlp.azure_q1('salir')
-nlp.proc_message1ST('estoy escribiendo a nombre de la empresa ..')
+#nlp.azure_q1('salir')
+#nlp.proc_message1ST('estoy escribiendo a nombre de la empresa ..')
 
 
-nlp.pred_prob('quien es lionel messi?')
+#nlp.pred_prob('quien es lionel messi?')
 
-nlp.proc_wiki('quien es lionel messi?')
+#nlp.proc_wiki('quien es lionel messi?')
 
 #message = 'cuanto cuesta un estudio actuarial para una empresa pequena' 
 #message = "quisiera informacion de mi proceso de jubilacion patronal"
@@ -50,8 +50,8 @@ nlp.proc_wiki('quien es lionel messi?')
 #context = [1,'Jubilacion Patronal',0.0,'quisiera informacion de mi proceso de jubilacion patronal',None,1,None,None]
 #message = "empresa"
 
-message= "55666"
-context = [4,"Jubilacion Patronal",-0.024999999999999994, 'quisiera informacion de mi proceso',"reqCurrProcInfo",0,"0190333515001","55666"]
+message= "sebastiantamayo3@gmial.cpom"
+context = [4,"IESS",-0.024999999999999994, 'necesito calcular mi pension del iess tenog 30 aportaciones',"reqCotizacion",0,None,None,"persona"]
 client_id="123"
 #context = [1,"Jubilacion Patronal",0.0, 'quisiera informacion del calculo de jubilacion patronal',None,None,None,None]
 
