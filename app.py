@@ -102,8 +102,8 @@ class Messenger(BaseMessenger):
         messenger.set_messenger_profile(messenger_profile.to_dict())
 
 
-FB_PAGE_TOKEN = 'EAAfYg8rcb0UBACgSMVQ7KI5WyaV3N3YzFZCCnnsET06VZBpLjp7IeZCKoGT5JUPlITOMhRb8LmsHsZAZBF8FmhaqfbP7wR5UwQ3WITP0cRc5ZBvknvuZBwdRiCUB02aU3HjEuVB0TGbJCtNuB0rQCZBWaZA8ZA7TYv9ZA5ZAm1kgJ4amzwZDZD'
-FB_VERIFY_TOKEN = 'VERIFY_TOKEN'
+FB_PAGE_TOKEN = 'XXXX'
+FB_VERIFY_TOKEN = 'XXXX'
 
 app = Flask(__name__)
 app.debug = True
