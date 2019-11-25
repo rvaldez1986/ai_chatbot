@@ -5,11 +5,11 @@ Created on Fri Aug  2 08:21:31 2019
 @author: sebastian.tamayo
 """
 
-base_url= "http://192.168.1.15:8080/actuaria-business/api"
+base_url= "http://XXX"
 
 import requests
 def consulta_ruc(ruc):
-   headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
+   headers  = {"Accept": "application/json", "authorization":"XXX"}
    URL= base_url+"/clientes/consulta-por-ruc/"+str(ruc)
 
    try:
@@ -26,7 +26,7 @@ def consulta_ruc(ruc):
 
 
 def consulta_proc(num_proc):
-   headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
+   headers  = {"Accept": "application/json", "authorization":"XXX"}
    URL= base_url+"/vendedores/datos/"+str(num_proc)
    URL2= base_url+"/procesos/estado-proceso/"+str(num_proc)
    URL3=base_url+"/procesos/consultar/"+str(num_proc)
