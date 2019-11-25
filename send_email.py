@@ -17,7 +17,7 @@ server = smtplib.SMTP('smtp.gmail.com', 587)
 server.ehlo()
 server.starttls()
 server.ehlo()
-server.login(fromaddr, "Actuaria2021")
+server.login(fromaddr, "XXX")
 server.sendmail(fromaddr, toaddr, text)
 server.quit()
 
