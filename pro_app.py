@@ -21,26 +21,10 @@ class ChatraClient():
     # Initilizing
     def __init__(self, headers):
         self.base_api = "https://app.chatra.io/api"
-        self.agent_id = "bF9w7viEcHXbBFupx"    #we only have one agent (daniela)
+        self.agent_id = "XXX"    #we only have one agent (daniela)
         self.headers = headers
         self.users_dict = defaultdict(lambda: [0, None, None, None, None, 0, None, None, None]) 
-        self.test_users = ["ejd1qwfk55gal5h463sx2otv08pbicyzumr9n55", 
-                           "15csp5dlu7jbo8iev7gf5154atr4h9mwzknyqx1",
-                           "ps15yauq6dve2t7rmb7jcfli22h7w25xgonkz13",
-                           "ao15glwpdk57ucq4y38t2mszhb6e2fj4in1rxv2",
-                           "xfh1s5btl6yopa7zm0ui1qejn2gw139r3c7kvd7",
-                           "kl1btfu55p2h14i8xr26vcgnadq8yom29wsjze5",
-                           "go1m55rc5vj4pf31yszqw40tkhixula5den22b0",
-                           "ai1npe5uj5mdfrbchwz0k8gyvq54o62s67x0tl1",
-                           "im1vcr5378l01g6zf0uopthqxajw7debkys45n3",
-                           "buo15d3eq9jv3cnp55kxz9al58yw9irt5mfshg8",
-                           "j1g5x6lfkc5qvtsnu89mw1o257bp9erzdi7yha6",
-                           "cfo1hz5peln5jtb7r8a4igwv3k8y75qd8xmsu46",
-                           "mejibp1thz5awsn5dyc4x3r2k1fgqu13o5l1v12",
-                           "ehu15nioz6mb2qlj0wgs9dkpy8vtxr09072cfa4",
-                           "hr1x5kzvip4syc7wgt4amfold8u3nj1320e9bq5",
-                           "1i5x2fzhl57e9ak8tpqy05jbcrumwsgv780odn8",        
-                           "ou1vlin5ysph6ebfg7tz0m1a71k4jd19qxrw4c9"]        
+        self.test_users = ["XXX"]        
    
 
     @classmethod
@@ -96,7 +80,7 @@ class ChatraClient():
     
     
     
-chatra = ChatraClient.token_authentication("dhwKj7nAPAvKyegmd","EdtrsAgtETzYz2pcpirjYqdaQamAXgx2vSnCsDa8CbDQHv3E")
+chatra = ChatraClient.token_authentication("XXX","XXX")
 
 app = Flask(__name__)
 app.debug = True
