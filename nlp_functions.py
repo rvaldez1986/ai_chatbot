@@ -21,7 +21,7 @@ from urls import u_IESS, u_RDD, u_JP, u_CONS, u_OS
 
 stemmer = SnowballStemmer("spanish")
 palabras_funcionales = nltk.corpus.stopwords.words("spanish")    
-base_url= "http://192.168.1.15:8080/actuaria-business/api"
+base_url= "http://XXX"
 
 
 
@@ -448,7 +448,7 @@ def val_Proc(string):
 def azure_q1(message):
     headers = {
             # Request headers
-            'Ocp-Apim-Subscription-Key': '55c4f6fd25a84e81bc2369845f18f9bf',
+            'Ocp-Apim-Subscription-Key': 'XXX',
     }
 
     params ={
@@ -463,7 +463,7 @@ def azure_q1(message):
 
 
     try:
-        r = requests.get('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/d8bd8e1e-7a79-4a00-aa99-4fbc8b1a8425',headers=headers, params=params)
+        r = requests.get('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/XXX',headers=headers, params=params)
         payload = r.json()
         #intents = payload['intents']  #en prox modelo se puede trabajar con probabilidades de intents, por ahora solo pasa max
         entities = payload['entities']
@@ -477,7 +477,7 @@ def azure_q1(message):
  
  
 def consulta_ruc(ruc):
-   headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
+   headers  = {"Accept": "application/json", "authorization":"XXX"}
    URL= base_url+"/clientes/consulta-por-ruc/"+str(ruc)
    
    try:
@@ -497,7 +497,7 @@ def consulta_ruc(ruc):
 def consulta_proc(num_proc):
    my_dict={"R":"Ingresado en Sistema","A":"Asignado a un tecnico","N":"En Desarrollo","D":"Esperando infromacion","L":"Finalizado por tecnico",
          "V":"Revisado","E":"Despachado","T":"Entregado al cliente","U":"Anulado","O":"Pagado y Entregado"} 
-   headers  = {"Accept": "application/json", "authorization":"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhY3R1YXJpYS1idXNpbmVzcyIsIm5hbWUiOiJwb3J0YWwifQ.n8_EF7R7EKayhwU3Eu7IfTdyAgGdFgfuoCa871aSJ7AY8Xu4AHyInOSik8IOjQag_vULNwdtJOcAKxqWv3ZQLg"}
+   headers  = {"Accept": "application/json", "authorization":"XXX"}
    URL= base_url+"/vendedores/datos/"+str(num_proc)
    URL2= base_url+"/procesos/estado-proceso/"+str(num_proc)
    URL3=base_url+"/procesos/consultar/"+str(num_proc)
@@ -524,14 +524,14 @@ def consulta_proc(num_proc):
    
 def send_email(text, toaddr):
     try:
-        fromaddr = "roberto.valdez@actuaria.com.ec"        
+        fromaddr = "XXX@actuaria.com.ec"        
         
         server = smtplib.SMTP('smtp.gmail.com', 587)
         #server.connect("smtp.gmail.com",465)
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login(fromaddr, "Actuaria2021")
+        server.login(fromaddr, "XXX")
         server.sendmail(fromaddr, toaddr, text)
         server.quit()
         
