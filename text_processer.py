@@ -150,7 +150,7 @@ def proc_message(message, context, client_id):
             if res == "actuaria":
                 ret_message = textos["NT"][0]              
                 message2 = textos["NT"][1].format(client_id, context[3]).encode("utf-8")             
-                toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
                 ret = nlp.send_email(message2, toaddr)           
                 context = [0, None, None, None, None, 0, None, None, None] 
                 
@@ -206,7 +206,7 @@ def proc_message(message, context, client_id):
                                 ret_message = textos["ST"][4]      
                             
                             message2 = textos['interno'].format(client_id, context[3]).encode("utf-8")             
-                            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                            toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
                             ret = nlp.send_email(message2, toaddr)
                             context = [0, None, None, None, None, 0, res, None, None]
                             
@@ -216,7 +216,7 @@ def proc_message(message, context, client_id):
                         context = [0, None, None, None, None, 0, res, None, None]
                         
                         message2 = textos['interno'].format(client_id, context[3]).encode("utf-8")             
-                        toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                        toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
                         ret = nlp.send_email(message2, toaddr)                   
                         
                         print('Exception en communication with azure q1: {0}'.format(e))
@@ -252,7 +252,7 @@ def proc_message(message, context, client_id):
                 
         else:  #Queja
             message2 = textos["MSG"][0].format(message, context[3]).encode('utf-8')        
-            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+            toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
             ret = nlp.send_email(message2, toaddr)
                     
             ret_message = textos["MSG"][1]
@@ -291,7 +291,7 @@ def proc_message(message, context, client_id):
         elif res == "no":
             ret_message = textos["KO"][2]             
             message2 = textos["KO"][3].format(client_id, context[3]).encode("utf-8")             
-            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+            toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
             ret = nlp.send_email(message2, toaddr)            
             
             context = [0, None, None, None, None, 0, None, None, None]
@@ -317,7 +317,7 @@ def proc_message(message, context, client_id):
         if context[4] == 'reqCotizacion':
             message2 = textos["MSG"][0].format(message).encode('utf-8')        
         
-            toaddr = "sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+            toaddr = "XXX@actuaria.com.ec"  #por ahora mi correo
             ret = nlp.send_email(message2, toaddr)  
         
             if ret == 'success':        
@@ -342,7 +342,7 @@ def proc_message(message, context, client_id):
                         ret_message = textos["KO"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)       
                         
                         message2 = textos["KO"][3].format(message,context[3],razon_social,estado_proceso,codigo_cliente_proc).encode('utf-8')        
-                        toaddr="sebastian.tamayo@actuaria.com.ec"  #por ahora mi correo
+                        toaddr="XXX@actuaria.com.ec"  #por ahora mi correo
                         ret = nlp.send_email(message2, toaddr)
                         if ret == 'success':        
                             ret_message = textos["KO"][0].format(razon_social,estado_proceso,nombre_encargado,correo_electronico,Extension_encargado,codigo_cliente_proc)
