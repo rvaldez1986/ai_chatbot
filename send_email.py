@@ -7,8 +7,8 @@ Created on Wed Aug  7 12:14:34 2019
 
 import smtplib
 
-fromaddr = "roberto.valdez@actuaria.com.ec"
-toaddr = "roberto.valdez@actuaria.com.ec"
+fromaddr = "XXX@actuaria.com.ec"
+toaddr = "XXX@actuaria.com.ec"
 text = "Hello World"
 
 
@@ -34,7 +34,7 @@ textos = txts.dict_textos4()
         
 message2 = ("\nSe envió al chatbot el requerimiento de una cotizacion con los siguientes datos: ").encode('utf-8')
 
-toaddr = "roberto.valdez@actuaria.com.ec"
+toaddr = "XX@actuaria.com.ec"
 ret = send_email(message2, toaddr)
 
 
