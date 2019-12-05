@@ -6,7 +6,7 @@ Python Chatbot connected with [Chatra’s API](https://chatra.io/help/api/).
 
 ### About
 
-Deployed on [Actuaria](www.actuaria.com.ec). Interacts with Chatra.io using a web server, a REST API and webhooks. Uses a flow chart for handling the user - bot interaction. Decisions on most nodes are based on a probabilistic model using a Neural Network. Connects with Azure LUIS for some nodes.
+Deployed on [Actuaria](https://actuaria.com.ec/). Interacts with Chatra.io using a web server, a REST API and webhooks. Uses a flow chart for handling the user - bot interaction. Decisions on most nodes are based on a probabilistic model using a Neural Network. Connects with Azure LUIS for some nodes.
 
 This program contains:
 
