@@ -6,12 +6,17 @@ Python Chatbot connected with [Chatra’s API](https://chatra.io/help/api/).
 
 ### About
 
-This program has the following functions:
+This program contains:
 
 * Chatras Webhook at [pro_app](pro_app.py).
-* Processing messages with NLP, Neural Networks, etc at [text_processer](text_processer.py).
-* send_generic_message(recipient_id, elements)
-* send_button_message(recipient_id, text, 
+* Chatbot flowchart handling at [text_processer](text_processer.py).
+* Natural language processing, API connections, etc. at [nlp_functions](nlp_functions.py).
+* Dictionary of replys at [textos](textos.py).
+* Dictionary of URLs at [urls](urls.py).
+* Data for fitting machine learning models at [pregunts](/Data/preguntas.csv). 
+
+
+
 
 
 
