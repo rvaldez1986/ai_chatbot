@@ -10,7 +10,7 @@ Deployed on [Actuaria](https://actuaria.com.ec/). Interacts with Chatra.io using
 
 This program contains:
 
-* Chatras Webhook at [pro_app](pro_app.py).
+* Chatra's Webhook at [pro_app](pro_app.py).
 * Chatbot flowchart handling at [text_processer](text_processer.py).
 * Natural language processing, API connections, etc. at [nlp_functions](nlp_functions.py).
 * Dictionary of replys at [textos](textos.py).
